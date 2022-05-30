@@ -1,0 +1,32 @@
+.text-primary {
+    color: #ffc107;
+}
+
+.btn-primary {
+    color: #000;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-primary:hover {
+    color: #000;
+    background-color: #ffca2c;
+    border-color: #ffc720;
+}
+
+.btn-outline-primary {
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+.bg-primary {
+    background-color: #ffc107 !important;
+}
+
+.nav-link, .nav-enlace, a {
+    color: #ffc107;
+}
+
+.nav-link:hover, a:hover {
+    color: #fff;
+}

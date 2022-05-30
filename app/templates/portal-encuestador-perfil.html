@@ -1,0 +1,95 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Perfil del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block active_portal %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block active_participantes %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block active_encuestas %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block active_resultados %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block active_estadisticas %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block body %}
+<div class="container max-700">
+    <div class="mini-contenedor">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Perfil del Encuestador</h1>
+            <p for="basic-url" class="form-label mb-4">Puedes modificar alguno de estos datos si es que son incorrectos.</p>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Nombre</span>
+                <input type="text" class="form-control" placeholder="" aria-label="Nombre" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Usuario</span>
+                <input type="text" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+                <span class="input-group-text" id="basic-addon2">@encuestas.jookeez.com</span>
+            </div>
+            <button class="btn btn-primary btn-lg" type="button">Guardar cambios</button>
+        </div>
+    </div>
+    <div class="mini-contenedor">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Cambio de contraseña</h1>
+            <p for="basic-url" class="form-label mb-4">Te recomendamos usar caracteres alfanuméricos y cambiarla cada 3 meses.</p>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Contraseña</span>
+                <input type="password" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Repetir Contraseña</span>
+                <input type="password" class="form-control" placeholder="" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <button class="btn btn-primary btn-lg" type="button">Modificar</button>
+        </div>
+    </div>
+    <div class="mini-contenedor">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Eliminar mi cuenta</h1>
+            <p class="form-label mb-4">Una vez eliminada tu cuenta se perderán todos tus datos. Esto no elimina las encuestas que hayas creado y los datos incorporados en estas.</p>
+            <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">Darme de baja</button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Eliminar mi cuenta</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Para confirmar esta operación necesitamos la palabra clave que otorga el administrador.</p>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Palabra clave</span>
+                                <input type="password" class="form-control" placeholder="" aria-label="Palabra clave" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary">Darme de baja</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block username %}
+Encuestador
+{% endblock %}

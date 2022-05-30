@@ -1,0 +1,70 @@
+{% extends "./layout.html" %}
+
+{% block title %}
+Conócenos
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/conocenos.css')}}">
+{% endblock %}
+
+{% block body %}
+<!-- CONTENIDO -->
+<section>
+  <main class="container p-3">
+      <div class="bg-light p-5 rounded">
+        <h1>Conócenos</h1><br>
+        <div class="card tarjeta-conocenos">
+          <div class="tarjeta-foto">
+            <img src="{{ url_for('static', filename='images/conocenos_catalina.jpeg')}}" class="card-img-top foto" alt="...">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Catalina Jiménez</h5>
+            <p class="card-text">Scrum Master</p>
+            <a href="//instagram.com/mocata.berry" target="_blank" class="btn btn-primary">@mocata.berry</a>
+          </div>
+        </div>
+        <div class="card tarjeta-conocenos">
+          <div class="tarjeta-foto">
+            <img src="{{ url_for('static', filename='images/conocenos_jookeez.png')}}" class="card-img-top foto" alt="...">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Joaquín Vásquez</h5>
+            <p class="card-text">Product Owner</p>
+            <a href="//github.com/jookeez" target="_blank" class="btn btn-primary">@jookeez</a>
+          </div>
+        </div>
+        <div class="card tarjeta-conocenos">
+          <div class="tarjeta-foto">
+            <img src="{{ url_for('static', filename='images/conocenos_patricio.jpeg')}}" class="card-img-top foto" alt="...">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Patricio Inostroza</h5>
+            <p class="card-text">Desarrollador</p>
+            <a href="//instagram.com/patoooig" target="_blank" class="btn btn-primary">@patoooig</a>
+          </div>
+        </div>
+        <div class="card tarjeta-conocenos">
+          <div class="tarjeta-foto">
+            <img src="{{ url_for('static', filename='images/favicon_192.png')}}" class="card-img-top foto" alt="...">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Alejandro Sánchez</h5>
+            <p class="card-text">Desarrollador</p>
+            <a href="//github.com/AlzZ88" target="_blank" class="btn btn-primary">@AlzZ88</a>
+          </div>
+        </div>
+        <div class="card tarjeta-conocenos">
+          <div class="tarjeta-foto">
+            <img src="{{ url_for('static', filename='images/favicon_192.png')}}" class="card-img-top foto" alt="...">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Félix Torres</h5>
+            <p class="card-text">Desarrollador</p>
+            <a href="//instagram.com/f3lixtm" target="_blank" class="btn btn-primary">@f3lixtm</a>
+          </div>
+        </div>
+      </div>
+    </main>
+</section>
+{% endblock %}

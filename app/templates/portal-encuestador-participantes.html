@@ -1,0 +1,75 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block active_portal %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block active_participantes %}
+class="nav-link text-dark active" aria-current="page"
+{% endblock %}
+
+{% block active_encuestas %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block active_resultados %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block active_estadisticas %}
+class="nav-link text-white"
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="mini-contenedor">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Agregar Participante</h1>
+            <p for="basic-url" class="form-label mb-4">Recuerda que el participante deberá confirmar su correo electrónico antes de ser agregado a la base de datos.</p>
+            <form action="{{url_for('enviar_verificacion_portal')}}" method="POST">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Nombre</span>
+                    <input type="text" name="nombre" class="form-control" placeholder="" aria-label="Nombre" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Correo electrónico</span>
+                    <input type="email" name="correo" class="form-control" placeholder="" aria-label="Nombre" aria-describedby="basic-addon1">
+                </div>
+                <button class="btn btn-primary btn-lg" type="submit">Agregar</button>
+            </form>
+        </div>
+    </div>
+    <div class="mini-contenedor">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Listado de Participantes</h1>
+            <p for="basic-url" class="form-label mb-4">Todos los participantes registrados han sido validados con una confirmación a su correo electrónico.</p>
+            <a href="javascript:location.reload()"><button type="button" class="btn btn-primary btn-lg px-4 me-sm-3 fw-bold mb-3">Actualizar</button></a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Nombre</td>
+                        <td>Correo electrónico</td>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for encuestado in encuestados %}
+                    <tr> 
+                        <td>{{ encuestado.1 }}</td>
+                        <td>{{ encuestado.0 }}</td>
+                        <td> 
+                            <a class="btn btn-danger" href="/eliminar-participante/{{ encuestado.0 }}">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

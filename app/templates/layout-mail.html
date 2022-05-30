@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .contenedor {
+            font-family: sans-serif;
+            min-width: 300px;
+            max-width: 800px;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        h1 {
+            font-size: calc(1.475rem + 2.7vw);
+            font-weight: 700;
+            line-height: 1;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        p {
+            font-size: 1.25rem;
+            font-weight: 300;
+            margin-top: 0;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .boton-principal {
+            cursor: pointer;
+            background-color: #ffc107;
+            border-color: #ffc107;
+            border-radius: 0.3rem;
+            color: #000;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            font-weight: 700;
+            padding: 8px 24px;
+            margin-bottom: 1.5rem;
+        }
+        .imagen {
+            width: 100%;
+        }
+        .texto-final {
+            padding: 16px;
+            font-size: 0.8em;
+            font-style: italic;
+            font-weight: 300;
+        }
+        a {
+            color: #ffc107;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: #000;
+        }
+        .tabla-pie {
+            height: 100px;
+            background-color: #ffc107;
+            border-color: #ffc107;
+            padding: 40px 0;
+        }
+        .pie-texto {
+            font-size: 15px;
+        }
+        .pie-derecha {
+            width: 150px;
+            right: 0px;
+            padding-right: 20px;
+        }
+        .pie-izquierda {
+            width: 100%;
+            left: 0px;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table class="contenedor">
+        <tr>
+            <h1>{% block h1 %}{% endblock %}</h1> 
+        </tr>
+        <tr>
+            <p>{% block parrafo_inicial %}{% endblock %}</p>
+        </tr>
+        <tr>
+            {% block boton %}{% endblock %}
+        </tr>
+        <tr>
+            {% block imagen_principal %}{% endblock %}
+        </tr>
+        <tr>
+            {% block parrafo_suscrito %}{% endblock %}
+        </tr>
+    </table>
+    <table class="contenedor tabla-pie ">
+        <tr>
+            <td class="pie-izquierda">
+                <p class="pie-texto">© 2022 SiSoySurvey. Derechos reservados.</p>
+            </td>
+            <td class="pie-derecha">
+                <a href="https://encuestas.jookeez.com"><img src="https://encuestas.jookeez.com/static/images/logo_semirecto_150.png" alt="" title=""></a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

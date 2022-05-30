@@ -1,0 +1,87 @@
+body {
+    min-height: 100vh;
+}
+
+.principal {
+    min-height: 100vh;
+    overflow-y: hidden;
+    display: flex;
+}
+
+.secundaria {
+    width: 100%;
+    display: flex;
+}
+
+.menu-lateral {
+    width: 230px;
+    height: 100vh;
+    position: fixed;
+    background-color: #3e3e3e;
+}
+
+.contenedor-derecho {
+    margin-left: 230px;
+    width: 100%;
+}
+
+.container {
+    max-width: 90%;
+    margin: auto;
+}
+
+.max-700 { 
+    max-width: 700px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: #ffc107;
+}
+
+.bg-participante {
+    background-color: #fff0c7;
+}
+
+.bg-encuestador {
+    background-color: #c3c3c3;
+}
+
+.logo-principal {
+    max-height: 50px;
+    margin: 0 auto;
+}
+
+.mini-contenedor {
+    padding: 0 2rem;
+    margin: 3rem 0;
+    border-radius: 1rem !important;
+    background-color: #ffffff60;
+}
+
+td {
+    border-color: #bebebe;
+}
+
+.listado-encuestas {
+    max-width: 100%;
+}
+
+.td-realizar {
+    width: 262px;
+}
+
+.td-abiertas {
+    width: 278px;
+}
+
+.td-finalizadas {
+    width: 183px;
+}
+
+.a-botones {
+    margin-right: 5px;
+}
+
+.none {
+    display: none;
+}
