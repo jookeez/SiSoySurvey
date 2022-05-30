@@ -6,8 +6,6 @@ from html_basico import basico
 app = Flask(__name__)
 app.register_blueprint(basico)
 
-#HOLA MUNDO
-
 #CONEXION SQL
 app.config['MYSQL_HOST'] = '103.195.100.230'
 app.config['MYSQL_USER'] = 'jookeezc_server'
