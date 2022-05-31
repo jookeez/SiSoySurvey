@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Encuestados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+</head>
+<body>
+    <header>
+		<h1>Nombre empresa</h1>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link" aria-current="page" href="/">Inicio</a>
+                    <a class="nav-link" href="/encuestas">Encuestas</a>
+                    <a class="nav-link active" href="/encuestados">Encuestados</a>
+                    <a class="nav-link" href="/login">
+                        <button class="btn btn-outline-danger" type="button">LogOut</button>
+                    
+                    </a>
+                    
+                </div>
+            </div	>
+            </div>
+        </nav>
+    </header>
+    <ul class="nav nav-tabs bg-dark text-white" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Lista</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Agregar Encuestado</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <h1 class="p-3 mb-2 bg-success text-white">Lista de Encuestados</h1>
+         
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Correo</td>
+                    <td>Nombre</td>
+                    <th> </th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for encuestado in encuestados %}
+                <tr> 
+                    <td>{{ encuestado.0 }}</td> <!--muestra nombre-->
+                    <td>{{ encuestado.1 }}</td> <!--muestra correo-->
+                    <td> 
+                        <!--<a href="/editar_encuestado/{{ encuestado.0 }}">Editar</a>-->
+                        
+                        <a class="btn btn-danger" href="/eliminar_encuestado/{{ encuestado.0 }}">Eliminar
+
+
+                        </a>
+                    </td>   
+                    
+                </tr>
+            {% endfor%} 
+            </tbody>
+        </table>
+
+
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <h1 class="p-3 mb-2 bg-primary text-white">Nuevos Encuestados</h1>        
+            <div class="container-fluid">
+                <form action="/nuevo_enc", method="POST">
+                    <div class="mb-3">
+                        <label for="Inputemail" class="form-label">Correo</label>
+                        <input type="email" name="correo" placeholder="name@example.com" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputName" class="form-label">Nombre</label>
+                        <input type="text" name="nombre" placeholder="Nombre" class="form-control"> 
+                    </div>
+                    <button type="submit"  class="btn btn-outline-success me-2"> Agregar Encuestado</button>
+                </form>
+            </div>
+
+
+            
+        </div>
+    </div>
+
+
+
+
+      <p>
+        
+    </p>  
+
+      <div class="container-fluid">
+        
+    </div>  
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+	
+</body>
+</html>
