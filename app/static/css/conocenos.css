@@ -1,16 +1,24 @@
 .tarjeta-conocenos {
-    width: 215px;
+    width: 480px;
+    height: 200px;
     margin: 10px;
     display: inline-block;
-    text-align: center;
 }
 
 .tarjeta-foto {
     width: 150px;
-    margin: 25px auto;
+    margin: 25px;
+    display: inline-flex;
 }
 
 .foto {
-    border-radius: 20px;
+    border-radius: 75px;
     object-fit: scale-down;
+}
+
+.card-body {
+    position: relative;
+    display: inline-block;
+    bottom: 40px;
+    right: 15px;
 }
