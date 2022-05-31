@@ -6,8 +6,8 @@
 }
 
 .tarjeta-foto {
-    width: 150px;
     margin: 25px;
+    width: 150px;
     display: inline-flex;
 }
 
