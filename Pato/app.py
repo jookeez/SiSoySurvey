@@ -23,7 +23,7 @@ def encuestas_encuestado(mail):
     p = data
     
     return render_template("encuestas.html",data=p)
-
+#HOLA
        
 if __name__ == '__main__':
     app.run(port = 3000, debug = True)
