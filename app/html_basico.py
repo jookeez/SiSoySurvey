@@ -6,6 +6,10 @@ basico = Blueprint('basico', __name__)
 def index():
     return render_template("index.html")
 
+@basico.route('/sprint1')
+def sprint1():
+    return render_template("sprint1.html")
+
 @basico.route('/iniciar-sesion')
 def iniciar_sesion():
     return render_template("iniciar-sesion.html")
