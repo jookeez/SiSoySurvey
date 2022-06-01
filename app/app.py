@@ -220,23 +220,22 @@ def portal_encuestador_encuestas_finalizadas():
 
 #VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE PUEDE RESPONDER
 #Ingreso mail, del mail que me de el id_encuesta
-@app.route("/portal-participante-encuestas/<mail>")
+@app.route("/portal-participante-encuestas-responder/<mail>")
 def encuestas_encuestado(mail):
-    
     cur1 = mysql.connection.cursor()
     cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Por realizar') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
     data = cur1.fetchall()
-    return render_template("portal-participante-encuestas.html", data=data)
+    return render_template("portal-participante-encuestas-responder.html", data=data)
 
 
 #VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE RESPONDIÓ
 #----- REVISAR CONSULTA SQL -----
-@app.route('/portal-participante-respondidas/<mail>')
+@app.route('/portal-participante-encuestas-respondidas/<mail>')
 def encuestas_respondidas_participante(mail):
     cur1 = mysql.connection.cursor()
     cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Cerradas') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
     data = cur1.fetchall()
-    return render_template("portal-participante-respondidas.html", data=data)
+    return render_template("portal-participante-encuestas-respondidas.html", data=data)
 
 
 

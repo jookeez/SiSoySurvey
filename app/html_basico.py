@@ -45,13 +45,13 @@ def terminos():
 def portal_participante():
     return render_template("portal-participante.html")
 
-@basico.route('/portal-participante-encuestas')
-def portal_participante_encuestas():
-    return render_template("portal-participante-encuestas.html")
+@basico.route('/portal-participante-encuestas-responder')
+def portal_participante_encuestas_responder():
+    return render_template("portal-participante-encuestas-responder.html")
 
-@basico.route('/portal-participante-respondidas')
-def portal_participante_respondidas():
-    return render_template("portal-participante-respondidas.html")
+@basico.route('/portal-participante-encuestas-respondidas')
+def portal_participante_encuestas_respondidas():
+    return render_template("portal-participante-encuestas-respondidas.html")
 
 @basico.route('/portal-participante-perfil')
 def portal_participante_perfil():

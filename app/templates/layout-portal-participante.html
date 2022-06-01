@@ -20,20 +20,21 @@
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
-          <li class="nav-item">
-            <a href="{{ url_for('basico.portal_participante')}}" {% block active_portal %}{% endblock %}>
+          <li class="mb-1">
+            <a href="{{ url_for('basico.portal_participante')}}" class="btn btn-menu align-items-center rounded collapsed {% block active_portal %}{% endblock %}">
               Portal
             </a>
           </li>
-          <li>
-            <a href="{{ url_for('basico.portal_participante_encuestas')}}" {% block active_encuestas %}{% endblock %}>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#encuestas-collapse" {% block active_encuestas %}{% endblock %} >
               Encuestas
-            </a>
-          </li>
-          <li>
-            <a href="{{ url_for('basico.portal_participante_respondidas')}}" {% block active_respondidas %}{% endblock %}>
-              Respondidas
-            </a>
+            </button>
+            <div class="collapse {% block active_encuestas_collapse %}{% endblock %}" id="encuestas-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{{ url_for('basico.portal_participante_encuestas_responder')}}" class="nav-link text-white rounded {% block active_participantes_responder %}{% endblock %}">Por Responder</a></li>
+                <li><a href="{{ url_for('basico.portal_participante_encuestas_respondidas')}}" class="nav-link text-white rounded {% block active_participantes_respondidas %}{% endblock %}">Respondidas</a></li>
+              </ul>
+            </div>
           </li>
         </ul>
         <hr>
@@ -46,7 +47,7 @@
             <li><a class="dropdown-item" href="{{ url_for('basico.portal_participante_perfil')}}">Perfil</a></li>
             <li><a class="dropdown-item" href="{{ url_for('basico.portal_participante_ajustes')}}">Ajustes</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{{ url_for('basico.index')}}">Cerrar sesión</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('basico.index') }}">Cerrar sesión</a></li>
           </ul>
         </div>
       </div>

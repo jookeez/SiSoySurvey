@@ -6,24 +6,24 @@ Portal del Participante
 
 {% block head %}{% endblock %}
 
-{% block active_portal %}
-class="nav-link text-white"
-{% endblock %}
-
 {% block active_encuestas %}
-class="nav-link text-dark active" aria-current="page"
+aria-expanded="true"
 {% endblock %}
 
-{% block active_respondidas %}
-class="nav-link text-white"
+{% block active_encuestas_collapse %}
+show
+{% endblock %}
+
+{% block active_participantes_respondidas %}
+active
 {% endblock %}
 
 {% block body %}
 <div class="container">
     <div class="mini-contenedor listado-encuestas">
         <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold mb-3">Encuestas por Responder</h1>
-            <p for="basic-url" class="form-label mb-4">Como participante ya puedes responder a estas encuestas.</p>
+            <h1 class="display-5 fw-bold mb-3">Encuestas Respondidas</h1>
+            <p for="basic-url" class="form-label mb-4">Puedes visualizar el histórico de encuestas que respondiste.</p>
             <table class="table" class="scrollbar .scrollbar-default">
                 <thead>
                     <tr>
@@ -44,8 +44,8 @@ class="nav-link text-white"
                     <td>{{ d.4 }}</td>
                     <td>{{ d.5 }}</td>
                     <td> 
-                        <a href= "/responder_encuesta/{{ d.0 }}" >
-                            <button class="btn btn-primary a-botones" type="button">Responder</button>  
+                        <a href= "/ver_encuesta/{{ d.0 }}" >
+                            <button class="btn btn-primary a-botones" type="button">Ver</button>  
                         </a>
                     </td>
                     <a>

@@ -35,8 +35,13 @@ body {
     max-width: 700px;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+.nav-pills .nav-pills .show>.nav-link {
     background-color: #ffc107;
+}
+
+.nav-link.active {
+    color: #ffc107 !important;
+    background-color: unset !important;
 }
 
 .bg-participante {
@@ -142,4 +147,11 @@ td {
     color: #ffc107;
   }
 
+.active {
+    color: #ffc107 !important;
+}
 
+.dropdown-item:focus {
+    background-color: #ffc107 !important;
+    color: #000 !important;
+}
