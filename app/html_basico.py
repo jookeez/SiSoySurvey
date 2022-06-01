@@ -38,6 +38,9 @@ def ultimas_encuestas():
 def terminos():
     return render_template("terminos.html")
 
+
+
+
 @basico.route('/portal-participante')
 def portal_participante():
     return render_template("portal-participante.html")
@@ -58,9 +61,20 @@ def portal_participante_perfil():
 def portal_participante_ajustes():
     return render_template("portal-participante-ajustes.html")
 
+
+
+
 @basico.route('/portal-encuestador')
 def portal_encuestador():
     return render_template("portal-encuestador.html")
+
+@basico.route('/portal-encuestador-participantes-agregar')
+def portal_encuestador_participantes_agregar():
+    return render_template("portal-encuestador-participantes-agregar.html")
+
+@basico.route('/portal-encuestador-encuestas-crear')
+def portal_encuestador_encuestas_crear():
+    return render_template("portal-encuestador-encuestas-crear.html")
 
 @basico.route('/portal-encuestador-resultados')
 def portal_encuestador_resultados():

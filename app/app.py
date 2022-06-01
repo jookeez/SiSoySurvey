@@ -124,15 +124,15 @@ def enviar_verificacion_portal():
         mensaje = Message(subject, sender=(enviar_nombre, enviar_mail), recipients=[correo_form])
         mensaje.html = render_template("mail-verificar.html", data=data)
         mail.send(mensaje)
-        return redirect(url_for('portal_encuestador_participantes'))
+        return redirect(url_for('portal_encuestador_participantes_crear'))
 
 #MUESTA EL LISTADO DE PARTICIPANTES EN EL PORTAL DEL ENCUESTADOR
-@app.route('/portal-encuestador-participantes')
-def portal_encuestador_participantes():
+@app.route('/portal-encuestador-participantes-listado')
+def portal_encuestador_participantes_listado():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM Encuestados')
     data = cur.fetchall()
-    return render_template("portal-encuestador-participantes.html", encuestados = data)
+    return render_template("portal-encuestador-participantes-listado.html", encuestados = data)
 
 #EL ENCUESTADOR ELIMINA AL PARTICIPANTE DE LA BASE DE DATOS
 @app.route('/eliminar-participante/<correo>')
@@ -192,40 +192,58 @@ lastPoll = Poll()
 app.secret_key = "mysecretkey"
 
 
-
-# MUESTRA EL LISTADO DE ENCUESTAS
-@app.route('/portal-encuestador-encuestas')
-def portal_encuestador_encuestas():
+# MUESTRA EL LISTADO DE ENCUESTAS POR REALIZAR
+@app.route('/portal-encuestador-encuestas-realizar')
+def portal_encuestador_encuestas_realizar():
     cur1 = mysql.connection.cursor()
     cur1.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Por realizar'")
-
     Ready = cur1.fetchall()
+    return render_template("portal-encuestador-encuestas-realizar.html", pollsReady=Ready)
+
+# MUESTRA EL LISTADO DE ENCUESTAS ABIERTAS
+@app.route('/portal-encuestador-encuestas-abiertas')
+def portal_encuestador_encuestas_abiertas():
     cur2 = mysql.connection.cursor()
     cur2.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado, E.fecha_inicio,E.fecha_fin,E.preguntas FROM Encuestas as E WHERE E.estado='Abierta'")
     Open = cur2.fetchall()
+    return render_template("portal-encuestador-encuestas-abiertas.html", pollsOpen=Open)
 
+# MUESTRA EL LISTADO DE ENCUESTAS FINALIZADAS
+@app.route('/portal-encuestador-encuestas-finalizadas')
+def portal_encuestador_encuestas_finalizadas():
     cur3 = mysql.connection.cursor()
     cur3.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado, E.fecha_inicio,E.fecha_fin,E.preguntas FROM Encuestas as E WHERE E.estado='Cerrada'" )
     Closed = cur3.fetchall()
-    return render_template("portal-encuestador-encuestas.html", pollsReady=Ready, pollsOpen=Open, pollsClosed=Closed)
+    return render_template("portal-encuestador-encuestas-finalizadas.html", pollsClosed=Closed)
 
+
+
+#VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE PUEDE RESPONDER
 #Ingreso mail, del mail que me de el id_encuesta
 @app.route("/portal-participante-encuestas/<mail>")
 def encuestas_encuestado(mail):
-
+    
     cur1 = mysql.connection.cursor()
     cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Por realizar') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
     data = cur1.fetchall()
-
-    
-    return render_template("portal-participante-encuestas.html",data=data)
+    return render_template("portal-participante-encuestas.html", data=data)
 
 
+#VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE RESPONDIÓ
+#----- REVISAR CONSULTA SQL -----
+@app.route('/portal-participante-respondidas/<mail>')
+def encuestas_respondidas_participante(mail):
+    cur1 = mysql.connection.cursor()
+    cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Cerradas') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
+    data = cur1.fetchall()
+    return render_template("portal-participante-respondidas.html", data=data)
 
 
 
 
 
+
+# ------------------ MANEJO DE ERRORES ------------------ #
 
 #MUESTRA LOS ERRORES CORRECTAMENTE
 @app.errorhandler(400)

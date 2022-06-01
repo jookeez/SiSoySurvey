@@ -1,0 +1,57 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block active_encuestas %}
+aria-expanded="true"
+{% endblock %}
+
+{% block active_encuestas_collapse %}
+show
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="mini-contenedor listado-encuestas">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Encuestas Abiertas</h1>
+            <p for="basic-url" class="form-label mb-4">Los participantes ya pueden responder estas encuestas.</p>
+            <table class="table" class="scrollbar .scrollbar-default">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titulo</th>
+                        <th>Descripción</th>
+                        <th>Fecha apertura</th>
+                        <th>Fecha cierre</th>
+                        <th>Preguntas</th>
+                    </tr>
+                </thead>
+                <tbody>    
+                    {% for pollo in pollsOpen %}
+                    <tr>
+                        <form action="/editar_encuesta" method="POST">
+                            <td name="code" scope="col"><b>{{pollo.0}}</b></td>
+                            <td name="title" scope="col">{{pollo.1}}</td>
+                            <td name="description" scope="col">{{pollo.2}}</td>
+                            <td scope="col">{{pollo.4}}</td>
+                            <td scope="col">{{pollo.5}}</td>
+                            <td scope="col">{{pollo.6}}</td>
+                            <td scope="col" class="td-abiertas">
+                                  <a href="/editar_encuesta/{{pollo.0}}" class="btn btn-success a-botones">Editar</a> <!--/editar_encuesta/{{pollo.1}}-->
+                                  <a href="/cerrar_encuesta/{{pollo.0}}" class="btn btn-primary a-botones">Finalizar</a>
+                                  <a href="/eliminar_encuesta/{{pollo.0}}" class="btn btn-danger a-botones">Eliminar</a><!--/eliminar_encuesta/{{pollo.1}}-->
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table> 
+        </div>
+    </div>
+</div>
+{% endblock %}

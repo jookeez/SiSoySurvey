@@ -19,37 +19,43 @@ class="nav-link text-white"
 {% endblock %}
 
 {% block body %}
-
-<table>
-    <thead>
-        <tr>
-            <td>ID</td>
-            <td>Nombre</td>
-            <td>Descripcion</td>
-            <td>Estado</td>
-            <td>N.Preguntas</td>
-        </tr>
-    </thead>
-    <tbody>
-        {% for d in data %}
-    <tr>
-        <td>{{ d.0 }}</td> <!-- ID-->
-        <td>{{ d.1 }}</td>
-        <td>{{ d.2 }}</td>
-        <td>{{ d.3 }}</td>
-        <td>{{ d.4 }}</td>
-        <td>{{ d.5 }}</td>
-        <td> 
-            <a href= "/responder_encuesta/{{ d.0 }}" >
-                <button type="button">Responder Encuesta</button>  
-            </a>
-        </td>
-        <a>
-
-        </a>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-
+<div class="container">
+    <div class="mini-contenedor listado-encuestas">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Encuestas por Responder</h1>
+            <p for="basic-url" class="form-label mb-4">Como participante ya puedes responder a estas encuestas.</p>
+            <table class="table" class="scrollbar .scrollbar-default">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripcion</th>
+                        <th>Estado</th>
+                        <th>Preguntas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in data %}
+                <tr>
+                    <td>{{ d.0 }}</td> <!-- ID-->
+                    <td>{{ d.1 }}</td>
+                    <td>{{ d.2 }}</td>
+                    <td>{{ d.3 }}</td>
+                    <td>{{ d.4 }}</td>
+                    <td>{{ d.5 }}</td>
+                    <td> 
+                        <a href= "/responder_encuesta/{{ d.0 }}" >
+                            <button class="btn btn-primary a-botones" type="button">Responder</button>  
+                        </a>
+                    </td>
+                    <a>
+            
+                    </a>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -20,28 +20,42 @@
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
-          <li class="nav-item">
-            <a href="{{ url_for('basico.portal_encuestador')}}" {% block active_portal %}{% endblock %}>
+          <li class="mb-1">
+            <a href="{{ url_for('basico.portal_encuestador')}}" class="btn btn-menu align-items-center rounded collapsed">
               Portal
             </a>
           </li>
-          <li>
-            <a href="{{ url_for('portal_encuestador_participantes')}}" {% block active_participantes %}{% endblock %}>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#participantes-collapse" {% block active_participante %}{% endblock %}>
               Participantes
-            </a>
+            </button>
+            <div class="collapse {% block active_participante_collapse %}{% endblock %}" id="participantes-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{{ url_for('basico.portal_encuestador_participantes_agregar')}}" class="nav-link text-white rounded">Agregar</a></li>
+                <li><a href="{{ url_for('portal_encuestador_participantes_listado')}}" class="nav-link text-white rounded">Listado</a></li>
+              </ul>
+            </div>
           </li>
-          <li>
-            <a href="{{ url_for('portal_encuestador_encuestas')}}" {% block active_encuestas %}{% endblock %}>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#encuestas-collapse" {% block active_encuestas %}{% endblock %} >
               Encuestas
-            </a>
+            </button>
+            <div class="collapse {% block active_encuestas_collapse %}{% endblock %}" id="encuestas-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{{ url_for('basico.portal_encuestador_encuestas_crear')}}" class="nav-link text-white rounded">Crear</a></li>
+                <li><a href="{{ url_for('portal_encuestador_encuestas_realizar')}}" class="nav-link text-white rounded">Por Realizar</a></li>
+                <li><a href="{{ url_for('portal_encuestador_encuestas_abiertas')}}" class="nav-link text-white rounded">Abiertas</a></li>
+                <li><a href="{{ url_for('portal_encuestador_encuestas_finalizadas')}}" class="nav-link text-white rounded">Finalizadas</a></li>
+              </ul>
+            </div>
           </li>
-          <li>
-            <a href="{{ url_for('basico.portal_encuestador_resultados')}}" {% block active_resultados %}{% endblock %}>
+          <li class="mb-1">
+            <a href="{{ url_for('basico.portal_encuestador_resultados')}}" class="btn btn-menu align-items-center rounded collapsed">
               Resultados
             </a>
           </li>
-          <li>
-            <a href="{{ url_for('basico.portal_encuestador_estadisticas')}}" {% block active_estadisticas %}{% endblock %}>
+          <li class="mb-1">
+            <a href="{{ url_for('basico.portal_encuestador_estadisticas')}}" class="btn btn-menu align-items-center rounded collapsed">
               Estadísticas
             </a>
           </li>
@@ -56,7 +70,7 @@
             <li><a class="dropdown-item" href="{{ url_for('basico.portal_encuestador_perfil')}}">Perfil</a></li>
             <li><a class="dropdown-item" href="{{ url_for('basico.portal_encuestador_ajustes')}}">Ajustes</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('basico.index') }}">Cerrar sesión</a></li>
           </ul>
         </div>
       </div>
