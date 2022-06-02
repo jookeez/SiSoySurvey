@@ -15,13 +15,13 @@
     <!-- MENU LATERAL -->
     <div class="principal">
       <div class="d-flex flex-column flex-shrink-0 p-3 text-white menu-lateral">
-        <a href="{{ url_for('basico.index')}}" class="d-flex align-items-center mb-lg-0 text-white text-decoration-none logo-principal">
+        <a href="{{ url_for('index')}}" class="d-flex align-items-center mb-lg-0 text-white text-decoration-none logo-principal">
             <img src="{{ url_for('static', filename='images/logo_semirecto_150.png')}}" alt="Inicio" title="">
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
           <li class="mb-1">
-            <a href="{{ url_for('basico.portal_encuestador')}}" class="btn btn-menu align-items-center rounded collapsed {% block active_portal %}{% endblock %}">
+            <a href="{{ url_for('portal_encuestador')}}" class="btn btn-menu align-items-center rounded collapsed {% block active_portal %}{% endblock %}">
               Portal
             </a>
           </li>
@@ -31,7 +31,7 @@
             </button>
             <div class="collapse {% block active_participante_collapse %}{% endblock %}" id="participantes-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="{{ url_for('basico.portal_encuestador_participantes_agregar')}}" class="nav-link text-white rounded {% block active_participantes_agregar %}{% endblock %}">Agregar</a></li>
+                <li><a href="{{ url_for('portal_encuestador_participantes_agregar')}}" class="nav-link text-white rounded {% block active_participantes_agregar %}{% endblock %}">Agregar</a></li>
                 <li><a href="{{ url_for('portal_encuestador_participantes_listado')}}" class="nav-link text-white rounded {% block active_participantes_listado %}{% endblock %}">Listado</a></li>
               </ul>
             </div>
@@ -42,7 +42,7 @@
             </button>
             <div class="collapse {% block active_encuestas_collapse %}{% endblock %}" id="encuestas-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="{{ url_for('basico.portal_encuestador_encuestas_crear')}}" class="nav-link text-white rounded {% block active_encuestas_crear %}{% endblock %}">Crear</a></li>
+                <li><a href="{{ url_for('portal_encuestador_encuestas_crear')}}" class="nav-link text-white rounded {% block active_encuestas_crear %}{% endblock %}">Crear</a></li>
                 <li><a href="{{ url_for('portal_encuestador_encuestas_realizar')}}" class="nav-link text-white rounded {% block active_encuestas_realizar %}{% endblock %}">Por Realizar</a></li>
                 <li><a href="{{ url_for('portal_encuestador_encuestas_abiertas')}}" class="nav-link text-white rounded {% block active_encuestas_abiertas %}{% endblock %}">Abiertas</a></li>
                 <li><a href="{{ url_for('portal_encuestador_encuestas_finalizadas')}}" class="nav-link text-white rounded {% block active_encuestas_finalizadas %}{% endblock %}">Finalizadas</a></li>
@@ -50,12 +50,12 @@
             </div>
           </li>
           <li class="mb-1">
-            <a href="{{ url_for('basico.portal_encuestador_resultados')}}" class="none btn btn-menu align-items-center rounded collapsed {% block active_resultados %}{% endblock %}">
+            <a href="{{ url_for('portal_encuestador_resultados')}}" class="none btn btn-menu align-items-center rounded collapsed {% block active_resultados %}{% endblock %}">
               Resultados
             </a>
           </li>
           <li class="mb-1">
-            <a href="{{ url_for('basico.portal_encuestador_estadisticas')}}" class="none btn btn-menu align-items-center rounded collapsed {% block active_estadisticas %}{% endblock %}">
+            <a href="{{ url_for('portal_encuestador_estadisticas')}}" class="none btn btn-menu align-items-center rounded collapsed {% block active_estadisticas %}{% endblock %}">
               Estadísticas
             </a>
           </li>
@@ -67,10 +67,10 @@
             <strong>Encuestador</strong>
           </a>
           <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" href="{{ url_for('basico.portal_encuestador_perfil')}}">Perfil</a></li>
-            <li><a class="dropdown-item" href="{{ url_for('basico.portal_encuestador_ajustes')}}">Ajustes</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('portal_encuestador_perfil')}}">Perfil</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('portal_encuestador_ajustes')}}">Ajustes</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{{ url_for('basico.index') }}">Cerrar sesión</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('index') }}">Cerrar sesión</a></li>
           </ul>
         </div>
       </div>

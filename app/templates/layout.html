@@ -16,17 +16,17 @@
       <header class="p-3 bg-dark">
         <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between">
-            <a href="{{ url_for('basico.index')}}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+            <a href="{{ url_for('index')}}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
               <img src="{{ url_for('static', filename='images/logo_semirecto_200.png')}}" alt="Inicio" title="">
             </a>
             <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a href="{{ url_for('basico.conocenos')}}" class="nav-link nav-enlace px-2">Conócenos</a></li>
-              <li><a href="{{ url_for('basico.ultimas_encuestas')}}" class="nav-link nav-enlace px-2">Últimas Encuestas</a></li>
-              <li><a href="{{ url_for('basico.terminos')}}" class="nav-link nav-enlace px-2">Términos</a></li>
+              <li><a href="{{ url_for('conocenos')}}" class="nav-link nav-enlace px-2">Conócenos</a></li>
+              <li><a href="{{ url_for('ultimas_encuestas')}}" class="nav-link nav-enlace px-2">Últimas Encuestas</a></li>
+              <li><a href="{{ url_for('terminos')}}" class="nav-link nav-enlace px-2">Términos</a></li>
             </ul>
             <div class="text-end">
-              <a href="{{ url_for('basico.iniciar_sesion')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar Sesión</button></a>
-              <a href="{{ url_for('basico.registrarse')}}"><button type="button" class="btn btn-primary">Registrarse</button></a>
+              <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar Sesión</button></a>
+              <a href="{{ url_for('registrarse')}}"><button type="button" class="btn btn-primary">Registrarse</button></a>
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
           <div class="d-flex justify-content-between py-3 my-3">
             <p>© 2022 SiSoySurvey. Derechos reservados.</p>
             <ul class="list-unstyled d-flex">
-              <li class="ms-3"><a href="{{ url_for('basico.index')}}"><img src="{{ url_for('static', filename='images/logo_semirecto_150.png')}}" alt="" title=""></a></li>
+              <li class="ms-3"><a href="{{ url_for('index')}}"><img src="{{ url_for('static', filename='images/logo_semirecto_150.png')}}" alt="" title=""></a></li>
             </ul>
           </div>
         </footer>

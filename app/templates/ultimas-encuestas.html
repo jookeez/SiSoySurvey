@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block head %}
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/ultimas-encuestas.css')}}">
 {% endblock %}
 
 {% block body %}
@@ -14,8 +14,31 @@
   <main class="container p-3">
       <div class="bg-light p-5 rounded">
         <h1>Últimas Encuestas</h1>
-        <p class="lead">
-            Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
+        <table class="table" class="scrollbar .scrollbar-primary">
+          <thead>
+              <tr>
+                  <th>Titulo</th>
+                  <th>Descripción</th>
+                  <th>Fecha Inicio</th>
+                  <th>Fecha Término</th>
+                  <th>Preguntas</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for d in data %}
+            <tr>
+              <th>{{ d.1 }}</th>
+              <td>{{ d.2 }}</td>
+              <td class="min-width">{{ d.3 }}</td>
+              <td class="min-width">{{ d.4 }}</td>
+              <td>{{ d.5 }}</td>
+              <td class="td-realizar">
+                  <a href="/encuestas/{{ d.0 }}" class="btn btn-primary a-botones">Responder</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </main>
 </section>

@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
-from html_basico import basico
 
 app = Flask(__name__)
-app.register_blueprint(basico)
 
 #CONEXION SQL
 app.config['MYSQL_HOST'] = '103.195.100.230'
@@ -229,15 +227,112 @@ def encuestas_encuestado(mail):
 
 
 #VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE RESPONDIÓ
-#----- REVISAR CONSULTA SQL -----
 @app.route('/portal-participante-encuestas-respondidas/<mail>')
 def encuestas_respondidas_participante(mail):
     cur1 = mysql.connection.cursor()
-    cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Cerradas') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
+    cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Cerrada') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
     data = cur1.fetchall()
     return render_template("portal-participante-encuestas-respondidas.html", data=data)
 
+#PODEMOS VER LAS ULTIMAS ENCUESTAS QUE ESTAN ABIERTAS
+@app.route('/ultimas-encuestas')
+def ultimas_encuestas():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT id_encuesta, nombre, descripcion, fecha_inicio, fecha_fin, preguntas FROM Encuestas WHERE estado='Abierta'")
+    data = cur.fetchall()
+    return render_template("ultimas-encuestas.html", data=data)
 
+#PODEMOS VER LAS ULTIMAS ENCUESTAS QUE ESTAN ABIERTAS EN EL INDEX
+@app.route('/')
+def index():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT id_encuesta, nombre, descripcion FROM Encuestas WHERE estado='Abierta' LIMIT 3")
+    data = cur.fetchall()
+    return render_template("index.html", data=data)
+
+
+
+
+
+
+
+
+#PAGINAS QUE SOLO RETORNAN UN ARCHIVO HTML
+@app.route('/sprint1')
+def sprint1():
+    return render_template("sprint1.html")
+
+@app.route('/iniciar-sesion')
+def iniciar_sesion():
+    return render_template("iniciar-sesion.html")
+
+@app.route('/iniciar-sesion-encuestador')
+def iniciar_sesion_encuestador():
+    return render_template("iniciar-sesion-encuestador.html")
+
+@app.route('/registrarse')
+def registrarse():
+    return render_template("registrarse.html")
+
+@app.route('/registrarse-encuestador')
+def registrarse_encuestador():
+    return render_template("registrarse-encuestador.html")
+
+@app.route('/conocenos')
+def conocenos():
+    return render_template("conocenos.html")
+
+@app.route('/terminos')
+def terminos():
+    return render_template("terminos.html")
+
+@app.route('/portal-participante')
+def portal_participante():
+    return render_template("portal-participante.html")
+
+@app.route('/portal-participante-encuestas-responder')
+def portal_participante_encuestas_responder():
+    return render_template("portal-participante-encuestas-responder.html")
+
+@app.route('/portal-participante-encuestas-respondidas')
+def portal_participante_encuestas_respondidas():
+    return render_template("portal-participante-encuestas-respondidas.html")
+
+@app.route('/portal-participante-perfil')
+def portal_participante_perfil():
+    return render_template("portal-participante-perfil.html")
+
+@app.route('/portal-participante-ajustes')
+def portal_participante_ajustes():
+    return render_template("portal-participante-ajustes.html")
+
+@app.route('/portal-encuestador')
+def portal_encuestador():
+    return render_template("portal-encuestador.html")
+
+@app.route('/portal-encuestador-participantes-agregar')
+def portal_encuestador_participantes_agregar():
+    return render_template("portal-encuestador-participantes-agregar.html")
+
+@app.route('/portal-encuestador-encuestas-crear')
+def portal_encuestador_encuestas_crear():
+    return render_template("portal-encuestador-encuestas-crear.html")
+
+@app.route('/portal-encuestador-resultados')
+def portal_encuestador_resultados():
+    return render_template("portal-encuestador-resultados.html")
+
+@app.route('/portal-encuestador-estadisticas')
+def portal_encuestador_estadisticas():
+    return render_template("portal-encuestador-estadisticas.html")
+
+@app.route('/portal-encuestador-perfil')
+def portal_encuestador_perfil():
+    return render_template("portal-encuestador-perfil.html")
+
+@app.route('/portal-encuestador-ajustes')
+def portal_encuestador_ajustes():
+    return render_template("portal-encuestador-ajustes.html")
 
 
 
