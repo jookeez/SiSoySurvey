@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
 
@@ -249,6 +249,38 @@ def index():
     cur.execute("SELECT id_encuesta, nombre, descripcion FROM Encuestas WHERE estado='Abierta' LIMIT 3")
     data = cur.fetchall()
     return render_template("index.html", data=data)
+    
+@app.route("/logear", methods = ['GET','POST'])
+def logear():
+    if request.method =='POST':
+        email = request.form['usuario']
+        password = request.form['contraseña']
+        a = "@encuestas.jookeez.com"
+        email = email+a
+        #print(email)
+        #print(password)
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM Encuestadores WHERE correo = %s', (email,))
+        user = cur.fetchone()
+        cur.close()
+        #print(user[2])
+
+        if user is not None:
+            if password == user[2]:
+                session['name'] = user[1]
+                return redirect(url_for('portal_encuestador'))
+            else: 
+                return "correo y/o contraseña no valido"
+        else:
+            return "Correo no registrado"        
+        cur.close()       
+        #if len(user)>0:
+        #return "Bienvenido :)"
+        #else:
+        #    return "Error, Correo y/o contraseña no valida"
+
+
+    return redirect(url_for('iniciar_sesion_encuestador'))        
 
 
 

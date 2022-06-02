@@ -7,14 +7,14 @@ Inicia sesión como Encuestador
 {% block body %}
 <div class="fondo bg-encuestador">
   <main class="form-signin">
-    <form>
+    <form action="/logear", method="POST" >
       <h1 class="h3 mb-3 fw-normal">Inicia sesión como Encuestador</h1>
       <div class="input-group">
         <input type="text" name="usuario" class="form-control" id="floatingInput" placeholder="Usuario" required>
         <span class="input-group-text" id="basic-addon2">@encuestas.jookeez.com</span>
       </div>
       <div class="input-group mb-3">
-        <input type="email" name="contraseña" class="form-control" id="floatingInput" placeholder="Contraseña" required>
+        <input type="passsword" name="contraseña" class="form-control" id="floatingInput" placeholder="Contraseña" required>
       </div>
       <div class="checkbox mb-3">
         <label>
