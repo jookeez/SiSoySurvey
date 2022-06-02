@@ -1,0 +1,46 @@
+{% extends "./layout-registrarse.html" %}
+
+{% block title %}
+Registrarse como Encuestador
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/registrarse.css')}}">
+{% endblock %}
+
+{% block body %}
+<!-- CONTENIDO -->
+<section>
+<main class="container container-registrarse p-3">
+    <div class="bg-light p-5 rounded">
+        <form action="{{url_for('enviar_verificacion')}}" method="POST">
+            <h1>Formulario de registro de Encuestador</h1>
+            <p class="lead">Debes seguir las instrucciones y agregar la palabra clave otorgada por el administrador. Una vez enviado este formulario, se creará automáticamente la cuenta.</p>
+            <div class="input-group flex-nowrap mb-3">
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre" aria-describedby="basic-addon2" required>
+            </div>
+            <div class="input-group mb-3">
+                <input type="text" name="usuario" class="form-control" placeholder="Usuario" aria-describedby="basic-addon2" required>
+                <span class="input-group-text" id="basic-addon2">@encuestas.jookeez.com</span>
+            </div>
+            <div class="input-group flex-nowrap mb-3">
+                <input type="password" name="contraseña" class="form-control" placeholder="Contraseña" aria-describedby="basic-addon2" required>
+            </div>
+            <div class="input-group flex-nowrap mb-3">
+                <input type="password" name="repetir-contraseña" class="form-control" placeholder="Repetir Contraseña" aria-describedby="basic-addon2" required>
+            </div>
+            <div class="input-group flex-nowrap mb-3">
+                <input type="password" name="palabra-clave" class="form-control" placeholder="Palabra clave" aria-describedby="basic-addon2" required>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input"type="checkbox" value="" id="flexCheckChecked" unchecked required>
+                <label class="form-check-label" for="flexCheckChecked">
+                Acepto los <a href="{{ url_for('terminos')}}" target="_blank" class="href">Términos y Condiciones de Uso</a>.
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary mb-2" type="submit">Enviar</button>
+        </form>
+    </div>
+    </main>
+</section>
+{% endblock %}

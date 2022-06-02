@@ -1,0 +1,53 @@
+body {
+  display: inline;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.fondo {
+  width: 100%;
+  padding: 100px 30px;
+}
+
+.bg-participante {
+  background-color: #fff0c7;
+}
+
+.bg-encuestador {
+  background-color: #bebebe;
+}
+
+.form-signin {
+  width: auto;
+  max-width: 500px;
+  margin: auto;
+}
+
+.form-signin .checkbox {
+  font-weight: 400;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.form-control {
+  padding: 1rem 0.75rem !important;
+}
+
+.footer-left {
+  text-align: left;
+}

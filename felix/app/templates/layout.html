@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | SiSoySurvey</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon_32.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/color.css')}}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="bg-secondary">
+      <header class="p-3 bg-dark">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-between">
+            <a href="{{ url_for('index')}}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+              <img src="{{ url_for('static', filename='images/logo_semirecto_200.png')}}" alt="Inicio" title="">
+            </a>
+            <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
+              <li><a href="{{ url_for('conocenos')}}" class="nav-link nav-enlace px-2">Conócenos</a></li>
+              <li><a href="{{ url_for('ultimas_encuestas')}}" class="nav-link nav-enlace px-2">Últimas Encuestas</a></li>
+              <li><a href="{{ url_for('terminos')}}" class="nav-link nav-enlace px-2">Términos</a></li>
+            </ul>
+            <div class="text-end">
+              <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar Sesión</button></a>
+              <a href="{{ url_for('registrarse')}}"><button type="button" class="btn btn-primary">Registrarse</button></a>
+            </div>
+          </div>
+        </div>
+      </header>
+    </nav>
+    {% block body %}{% endblock %}
+
+    <!-- FOOTER -->
+    <section class="bg-primary">
+      <div class="container">
+        <footer class="py-2">      
+          <div class="d-flex justify-content-between py-3 my-3">
+            <p>© 2022 SiSoySurvey. Derechos reservados.</p>
+            <ul class="list-unstyled d-flex">
+              <li class="ms-3"><a href="{{ url_for('index')}}"><img src="{{ url_for('static', filename='images/logo_semirecto_150.png')}}" alt="" title=""></a></li>
+            </ul>
+          </div>
+        </footer>
+      </div>
+    </section>
+    <!-- JS -->
+    <script src="{{ url_for('static', filename='js/popper.min.js')}}" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+</body>
+</html>

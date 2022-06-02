@@ -1,0 +1,57 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block active_encuestas %}
+aria-expanded="true"
+{% endblock %}
+
+{% block active_encuestas_collapse %}
+show
+{% endblock %}
+
+{% block active_encuestas_realizar %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="mini-contenedor listado-encuestas">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Encuestas Por Realizar</h1>
+            <p for="basic-url" class="form-label mb-4">Estas encuestas todavía no son enviadas a los participantes.</p>
+            <table class="table" class="scrollbar .scrollbar-primary">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titulo</th>
+                        <th>Descripción</th>
+                        <th>Preguntas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pollr in pollsReady %}
+                    <tr>
+                        <form action="/editar_encuesta" method="POST">
+                            <td name="code" scope="col"><b>{{pollr.0}}</b></td>
+                            <td name="title" scope="col">{{pollr.1}}</td>
+                            <td name="description" scope="col">{{pollr.2}}</td>
+                            <td scope="col">{{pollr.4}}</td>
+                            <td scope="col" class="td-realizar">
+                                <a href="/editar_encuesta/{{pollr.0}}" class="btn btn-success a-botones">Editar</a>
+                                <a href="/enviar_encuesta/{{pollr.0}}" class="btn btn-primary a-botones">Enviar</a>
+                                <a href="/eliminar_encuesta/{{pollr.0}}" class="btn btn-danger a-botones">Eliminar</a>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
