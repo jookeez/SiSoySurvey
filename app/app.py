@@ -21,6 +21,7 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_MAX_EMAILS'] = 500  # Maximo de correos a enviar
 mail = Mail(app)
 
+#delete(system32);
 #VERFICAMOS EL CORREO ELECTRONICO ENVIANDO UN CORREO
 @app.route('/enviar-verificacion/', methods=['POST'])
 def enviar_verificacion():
