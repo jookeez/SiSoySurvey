@@ -1,0 +1,21 @@
+{% extends "./layout.html" %}
+
+{% block title %}
+Sprint Review 1
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sprint.css')}}">
+{% endblock %}
+
+{% block body %}
+<section>
+    <main class="container p-3">
+        <div class="bg-light p-5 rounded">
+          <h1>Sprint Review 2</h1>
+          <p class="lead">Presentación en PDF.</p>
+          <embed class="pdf" src="files/SprintReview2.pdf" type="application/pdf" />
+        </div>
+      </main>
+  </section>
+{% endblock %}
