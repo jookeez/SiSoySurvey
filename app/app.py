@@ -122,7 +122,7 @@ def enviar_verificacion_portal():
         mensaje = Message(subject, sender=(enviar_nombre, enviar_mail), recipients=[correo_form])
         mensaje.html = render_template("mail-verificar.html", data=data)
         mail.send(mensaje)
-        return redirect(url_for('portal_encuestador_participantes_crear'))
+        return redirect(url_for('portal_encuestador_participantes_agregar'))
 
 #MUESTA EL LISTADO DE PARTICIPANTES EN EL PORTAL DEL ENCUESTADOR
 @app.route('/portal-encuestador-participantes-listado')
@@ -250,6 +250,7 @@ def index():
     data = cur.fetchall()
     return render_template("index.html", data=data)
     
+#VERIFICA EL INICIO DE SESION DEL ENCUESTADOR
 @app.route("/logear", methods = ['GET','POST'])
 def logear():
     if request.method =='POST':
@@ -260,17 +261,17 @@ def logear():
         #print(email)
         #print(password)
         cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM Encuestadores WHERE correo = %s', (email,))
+        cur.execute('SELECT * FROM Encuestadores WHERE correo = %s', [email])
         user = cur.fetchone()
         cur.close()
         #print(user[2])
 
         if user is not None:
             if password == user[2]:
-                session['name'] = user[1]
+                session['name'] = user[1] #Se le pasa el nombre al HTML del portal
                 return redirect(url_for('portal_encuestador'))
             else: 
-                return "correo y/o contraseña no valido"
+                return "correo y/o contraseña no valido" #Error en correo escrito o contraseña
         else:
             return "Correo no registrado"        
         cur.close()       
@@ -281,6 +282,35 @@ def logear():
 
 
     return redirect(url_for('iniciar_sesion_encuestador'))        
+
+#VERIFICA EL INICIO DE SESION DEL ENCUESTADOR
+@app.route("/logear-participante", methods = ['GET','POST'])
+def logear_participante():
+    if request.method =='POST':
+        email = request.form['correo']
+        #print(email)
+        #print(password)
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM Encuestados WHERE correo = %s', [email])
+        user = cur.fetchone()
+        cur.close()
+        #print(user[2])
+
+        if user is not None:
+            if email == user[0]:
+                session['name'] = user[1] #Se le pasa el nombre al HTML del portal
+                return redirect(url_for('portal_participante'))
+            else: 
+                return "correo no valido" #Error en correo escrito o contraseña
+        else:
+            return "Correo no registrado"
+        cur.close()       
+        #if len(user)>0:
+        #return "Bienvenido :)"
+        #else:
+        #    return "Error, Correo y/o contraseña no valida"
+
+    return redirect(url_for('iniciar_sesion'))  
 
 
 
@@ -293,6 +323,10 @@ def logear():
 @app.route('/sprint1')
 def sprint1():
     return render_template("sprint1.html")
+
+@app.route('/sprint2')
+def sprint2():
+    return render_template("sprint2.html")
 
 @app.route('/iniciar-sesion')
 def iniciar_sesion():

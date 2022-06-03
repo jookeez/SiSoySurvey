@@ -7,7 +7,7 @@ Iniciar Sesión como Participante
 {% block body %}
 <div class="fondo bg-participante">
   <main class="form-signin">
-    <form>
+    <form action="/logear-participante", method="POST">
       <h1 class="h3 mb-3 fw-normal">Inicia sesión como Participante</h1>
       <div class="form-floating mb-3">
         <input type="email" name="correo" class="form-control" id="floatingInput" placeholder="ejemplo@jookeez.com" required>
