@@ -21,14 +21,14 @@
         <tbody>
             {% for d in data %}
         <tr>
-            <td>{{ d.0 }}</td>
+            <td>{{ d.0 }}</td> <!-- ID-->
             <td>{{ d.1 }}</td>
             <td>{{ d.2 }}</td>
             <td>{{ d.3 }}</td>
             <td>{{ d.4 }}</td>
             <td>{{ d.5 }}</td>
             <td> 
-                <a href= "/responder_encuesta/3" >
+                <a href= "/responder_encuesta/{{ d.0 }}" >
                     <button type="button">Responder Encuesta</button>  
                 </a>
             </td>
