@@ -392,6 +392,7 @@ def cerrar_sesion():
     session.clear()
     return redirect(url_for("index"))
 
+# NUEVO FORMULARIO DE ENCUESTAS
 @app.route('/encuestas/<int:id_encuesta>')
 def responder_encuestas(id_encuesta):
     cur = mysql.connection.cursor()
