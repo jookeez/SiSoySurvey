@@ -212,7 +212,7 @@ def portal_encuestador_encuestas_finalizadas():
     cur3 = mysql.connection.cursor()
     cur3.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado, E.fecha_inicio,E.fecha_fin,E.preguntas FROM Encuestas as E WHERE E.estado='Cerrada'" )
     Closed = cur3.fetchall()
-    return render_template("portal-encuestador-encuestas-finalizadas.html", pollsClosed=Closed)
+    return render_template("portal-encuestador-encuestas-finalizadas.html", Closed=Closed)
 
 
 
@@ -312,7 +312,19 @@ def logear_participante():
 
     return redirect(url_for('iniciar_sesion'))  
 
+#EL ENCUESTADOR EDITA LA ENCUESTA DE LA BASE DE DATOS
+@app.route('/editar-encuesta/<int:id_encuesta>')
+def editar_encuesta(id_encuesta):
+    data = id_encuesta
+    return render_template("portal-encuestador-encuestas-editar.html", data=data)
 
+#EL ENCUESTADOR ELIMINA LA ENCUESTA DE LA BASE DE DATOS
+@app.route('/eliminar-encuesta/<int:id_encuesta>')
+def eliminar_encuesta(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
+    mysql.connection.commit()
+    return redirect(url_for('portal_encuestador_encuestas_finalizadas'))
 
 
 
@@ -383,6 +395,10 @@ def portal_encuestador_participantes_agregar():
 @app.route('/portal-encuestador-encuestas-crear')
 def portal_encuestador_encuestas_crear():
     return render_template("portal-encuestador-encuestas-crear.html")
+
+@app.route('/portal-encuestador-encuestas-editar')
+def portal_encuestador_encuestas_editar():
+    return render_template("portal-encuestador-encuestas-editar.html")
 
 @app.route('/portal-encuestador-resultados')
 def portal_encuestador_resultados():
