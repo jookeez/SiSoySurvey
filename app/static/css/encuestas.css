@@ -1,0 +1,13 @@
+.container {
+    max-width: 70%;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #ffc107;
+}
+
+.form-check-input:checked {
+    background-color: #000;
+    border-color: #000;
+}

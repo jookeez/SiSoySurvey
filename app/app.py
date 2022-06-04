@@ -392,6 +392,20 @@ def cerrar_sesion():
     session.clear()
     return redirect(url_for("index"))
 
+@app.route('/encuestas/<int:id_encuesta>')
+def responder_encuestas(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT nombre, descripcion, preguntas FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
+    data = cur.fetchone()
+    cur.close()
+
+    informacion = {
+        'nombre' : data[0],
+        'descripcion' : data[1],
+        'preguntas' : data[2]
+    }
+    return render_template("responde.html", informacion=informacion)
+
 # EL ENCUESTADOR EDITA LA ENCUESTA DE LA BASE DE DATOS
 @app.route('/editar-encuesta/<int:id_encuesta>')
 def editar_encuesta(id_encuesta):
@@ -443,6 +457,10 @@ def conocenos():
 @app.route('/terminos')
 def terminos():
     return render_template("terminos.html")
+
+@app.route('/responde')
+def responde():
+    return render_template("responde.html")
 
 @app.route('/portal-participante')
 def portal_participante():
@@ -584,8 +602,10 @@ def error_503(error):
         'titulo': "¡Se cayó el sistema!",
         'descripcion': "Nuestro servidor no esta disponible en este momento.",
     }
-
     return render_template("aviso.html", informacion=informacion), 503
+
+
+
 
 
 
