@@ -1,17 +1,18 @@
+from crypt import methods
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 
-#CONEXION SQL
+# CONEXION SQL
 app.config['MYSQL_HOST'] = '103.195.100.230'
 app.config['MYSQL_USER'] = 'jookeezc_server'
 app.config['MYSQL_PASSWORD'] = 'is2_gonzal0'
 app.config['MYSQL_DB'] = 'jookeezc_encuesta'
 mysql = MySQL(app)
 
-#CONEXION SMTP PARA ENVIO DE CORREOS
+# CONEXION SMTP PARA ENVIO DE CORREOS
 app.config['MAIL_SERVER'] = 'encuestas.jookeez.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = "no-responder@encuestas.jookeez.com"
@@ -21,7 +22,7 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_MAX_EMAILS'] = 500  # Maximo de correos a enviar
 mail = Mail(app)
 
-#VERFICAMOS EL CORREO ELECTRONICO ENVIANDO UN CORREO
+# VERFICAMOS EL CORREO ELECTRONICO ENVIANDO UN CORREO
 @app.route('/enviar-verificacion/', methods=['POST'])
 def enviar_verificacion():
     if request.method == 'POST':
@@ -41,16 +42,13 @@ def enviar_verificacion():
         informacion = {
             'titulo_favicon': "Verificación de correo electrónico",
             'titulo': "¡Revisa tu correo!",
-            'descripcion': "Te enviamos una confirmación a tu correo electrónico.",
-            'texto_boton': "Ir al HOME",
-            'enlace_boton': "https://encuestas.jookeez.com"
+            'descripcion': "Te enviamos una confirmación a " + correo_form
         }
-        return render_template("aviso-boton.html", informacion=informacion)
+        return render_template("aviso.html", informacion=informacion)
 
-#EL USUARIO HA CONFIRMADO SU CORREO, ESTA ES LA RESPUESTA 
+# EL USUARIO HA CONFIRMADO SU CORREO, ESTA ES LA RESPUESTA 
 @app.route('/confirmacion/<nombre>/<correo>')
 def confirmacion(nombre, correo):
-
     cur = mysql.connection.cursor()
     cur.execute('INSERT INTO Encuestados (correo,nombre) VALUES (%s,%s)',(correo,nombre))
     mysql.connection.commit()
@@ -59,12 +57,43 @@ def confirmacion(nombre, correo):
         'titulo_favicon': "Cuenta verificada!",
         'titulo': "¡" + nombre + ", eres oficialmente bienvenido!",
         'descripcion': "Tu correo " + correo + " ha sido verificado exitosamente.",
-        'texto_boton': "Ir al HOME",
-        'enlace_boton': "https://encuestas.jookeez.com"
+        'texto_boton': "Iniciar Sesión",
+        'enlace_boton': "https://encuestas.jookeez.com/iniciar-sesion"
     }
     return render_template("aviso-boton.html", informacion=informacion)
 
-#ENVIA ENCUESTAS POR CORREO A LOS PARTICIPANTES
+# AGREGAMOS UN NUEVO ENCUESTADOR A LA BASE DE DATOS
+@app.route('/agregar-encuestador/', methods=['POST'])
+def agregar_encuestador():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        usuario = request.form['usuario']
+        password = request.form['password']
+        password_repetir = request.form['password_repetir']
+        palabra_clave = request.form['palabra_clave']
+
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM Encuestadores WHERE correo = %s', [usuario])
+        usuario_existe = cur.fetchone()
+        cur.execute('SELECT * FROM PalabraClave WHERE palabra_clave = %s', [palabra_clave])
+        clave = cur.fetchone()
+        cur.close()
+
+        if usuario != usuario_existe and password == password_repetir and clave[0] == palabra_clave:
+            cur = mysql.connection.cursor()
+            cur.execute('INSERT INTO Encuestadores (nombre, contraseña, correo) VALUES (%s,%s,%s)', [nombre, password, usuario])
+            mysql.connection.commit()
+
+            informacion = {
+                'titulo_favicon': "Cuenta creada!",
+                'titulo': "¡" + nombre + ", eres oficialmente un encuestador!",
+                'descripcion': "Tu cuenta ha sido creada exitosamente.",
+                'texto_boton': "Iniciar Sesión",
+                'enlace_boton': "/iniciar-sesion-encuestador"
+            }
+            return render_template("aviso-boton.html", informacion=informacion)
+
+# ENVIA ENCUESTAS POR CORREO A LOS PARTICIPANTES
 @app.route('/enviar-mensaje/<nombre>/<correo>/<int:id_encuesta>/<encuesta>')
 def enviar_mensaje(nombre, correo, id_encuesta, encuesta):
     data = {
@@ -89,23 +118,86 @@ def enviar_mensaje(nombre, correo, id_encuesta, encuesta):
     }
     return render_template("aviso-boton.html", informacion=informacion)
 
-#EL USUARIO SE DA DE BAJA Y SE CONFIRMA SU DESUSCRIPCION
+# EL USUARIO SE DA DE BAJA Y SE CONFIRMA SU DESUSCRIPCION
 @app.route('/desuscribir/<correo>')
 def desuscribir(correo):
     informacion = {
         'titulo_favicon': "Darse de baja",
         'titulo': "¡Lamentamos que te vayas!",
-        'descripcion': "El correo " + correo + " fue dado de baja exitosamente.",
-        'texto_boton': "Ir al HOME",
-        'enlace_boton': "https://encuestas.jookeez.com"
+        'descripcion': "El correo " + correo + " fue dado de baja exitosamente."
     }
     cur = mysql.connection.cursor()
     cur.execute('DELETE FROM Encuestados WHERE correo = %s', [correo])
     mysql.connection.commit()
 
-    return render_template("aviso-boton.html", informacion=informacion)
+    return render_template("aviso.html", informacion=informacion)
 
-#VERFICAMOS EL CORREO ELECTRONICO ENVIANDO UN CORREO
+# EL USUARIO SE DA DE BAJA Y SE CONFIRMA SU DESUSCRIPCION
+@app.route('/dar-de-baja-encuestador/<correo>', methods=['POST'])
+def dar_de_baja_encuestador(correo):
+    if request.method =='POST':
+        palabra_clave = request.form['palabra_clave']
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM PalabraClave WHERE palabra_clave = %s', [palabra_clave])
+        mysql.connection.commit()
+        clave = cur.fetchone()
+        cur.close()
+
+        if clave[0] == palabra_clave:
+            cur = mysql.connection.cursor()
+            cur.execute('DELETE FROM Encuestadores WHERE correo = %s', [correo])
+            mysql.connection.commit()
+            informacion = {
+                'titulo_favicon': "Eliminar mi cuenta",
+                'titulo': "¡Fue un gusto trabajar contigo!",
+                'descripcion': "El correo " + correo + "@encuestas.jookeez.com fue eliminado exitosamente."
+            }
+            return render_template("aviso.html", informacion=informacion)
+        else:
+            # ENVIAR MENSAJE AL USUARIO
+            return redirect(url_for('portal_encuestador_perfil'))
+    else:
+        return redirect(url_for('portal_encuestador_perfil'))
+
+# EL PARTICIPANTE CAMBIA SU NOMBRE EN EL PORTAL
+@app.route("/cambiar-nombre-participante/<correo>", methods=['POST'])
+def cambiar_nombre_participante(correo):
+    if request.method =='POST':
+        nuevo_nombre = request.form['nuevo_nombre']
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE Encuestados SET nombre = %s WHERE correo = %s',[nuevo_nombre, correo])
+        mysql.connection.commit()
+        session['nombre'] = nuevo_nombre
+        return redirect(url_for('portal_participante_perfil'))
+
+# EL ENCUESTADOR CAMBIA SU NOMBRE EN EL PORTAL
+@app.route("/cambiar-nombre-encuestador/<correo>", methods=['POST'])
+def cambiar_nombre_encuestador(correo):
+    if request.method =='POST':
+        nuevo_nombre = request.form['nuevo_nombre']
+        cur = mysql.connection.cursor()
+        cur.execute('UPDATE Encuestadores SET nombre = %s WHERE correo = %s',[nuevo_nombre, correo])
+        mysql.connection.commit()
+        session['nombre'] = nuevo_nombre
+        return redirect(url_for('portal_encuestador_perfil'))
+
+# EL ENCUESTADOR CAMBIA SU CONTRASEÑA EN EL PORTAL
+@app.route("/cambiar-password-encuestador/<correo>", methods=['POST'])
+def cambiar_password_encuestador(correo):
+    if request.method =='POST':
+        password = request.form['password']
+        password_repetir = request.form['password_repetir']
+        if password == password_repetir:
+            cur = mysql.connection.cursor()
+            cur.execute('UPDATE Encuestadores SET contraseña = %s WHERE correo = %s',[password, correo])
+            mysql.connection.commit()
+            return redirect(url_for('portal_encuestador_perfil'))
+        else:
+            # AGREGAR MENSAJE DE CONTRASEÑAS NO SON IGUALES
+            return redirect(url_for('portal_encuestador_perfil'))
+
+# CUANDO AGREGAMOS UN NUEVO PARTICIPANTE EN EL PORTAL, 
+# VERFICAMOS EL CORREO ELECTRONICO ENVIANDO UN CORREO
 @app.route('/enviar-verificacion-encuestador/', methods=['POST'])
 def enviar_verificacion_portal():
     if request.method == 'POST':
@@ -124,15 +216,15 @@ def enviar_verificacion_portal():
         mail.send(mensaje)
         return redirect(url_for('portal_encuestador_participantes_agregar'))
 
-#MUESTA EL LISTADO DE PARTICIPANTES EN EL PORTAL DEL ENCUESTADOR
+# MUESTRA EL LISTADO DE PARTICIPANTES EN EL PORTAL DEL ENCUESTADOR
 @app.route('/portal-encuestador-participantes-listado')
 def portal_encuestador_participantes_listado():
     cur = mysql.connection.cursor()
     cur.execute('SELECT * FROM Encuestados')
     data = cur.fetchall()
-    return render_template("portal-encuestador-participantes-listado.html", encuestados = data)
+    return render_template("portal-encuestador-participantes-listado.html", encuestados=data)
 
-#EL ENCUESTADOR ELIMINA AL PARTICIPANTE DE LA BASE DE DATOS
+# EL ENCUESTADOR ELIMINA AL PARTICIPANTE DE LA BASE DE DATOS
 @app.route('/eliminar-participante/<correo>')
 def eliminar_participante(correo):
     cur = mysql.connection.cursor()
@@ -184,7 +276,7 @@ class Poll:
     def getState(self):
         return self._state 
 
-#Variables Globales
+# Variables Globales
 # hace referencia a la ultima encuesta creada
 lastPoll = Poll()
 app.secret_key = "mysecretkey"
@@ -216,8 +308,7 @@ def portal_encuestador_encuestas_finalizadas():
 
 
 
-#VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE PUEDE RESPONDER
-#Ingreso mail, del mail que me de el id_encuesta
+# VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE PUEDE RESPONDER
 @app.route("/portal-participante-encuestas-responder/<mail>")
 def encuestas_encuestado(mail):
     cur1 = mysql.connection.cursor()
@@ -226,7 +317,7 @@ def encuestas_encuestado(mail):
     return render_template("portal-participante-encuestas-responder.html", data=data)
 
 
-#VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE RESPONDIÓ
+# VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE YA RESPONDIÓ
 @app.route('/portal-participante-encuestas-respondidas/<mail>')
 def encuestas_respondidas_participante(mail):
     cur1 = mysql.connection.cursor()
@@ -242,7 +333,8 @@ def ultimas_encuestas():
     data = cur.fetchall()
     return render_template("ultimas-encuestas.html", data=data)
 
-#PODEMOS VER LAS ULTIMAS ENCUESTAS QUE ESTAN ABIERTAS EN EL INDEX
+# INDEX
+# PODEMOS VER LAS ULTIMAS ENCUESTAS QUE ESTAN ABIERTAS EN EL INDEX
 @app.route('/')
 def index():
     cur = mysql.connection.cursor()
@@ -250,16 +342,33 @@ def index():
     data = cur.fetchall()
     return render_template("index.html", data=data)
     
-#VERIFICA EL INICIO DE SESION DEL ENCUESTADOR
-@app.route("/logear", methods = ['GET','POST'])
-def logear():
+# VERIFICA EL INICIO DE SESION DEL ENCUESTADOR
+@app.route("/logear-participante", methods = ['GET','POST'])
+def logear_participante():
+    if request.method =='POST':
+        email = request.form['correo']
+        cur = mysql.connection.cursor()
+        cur.execute('SELECT * FROM Encuestados WHERE correo = %s', [email])
+        user = cur.fetchone()
+        cur.close()
+
+        if user is not None:
+            if email == user[0]:
+                session['nombre'] = user[1] #Se le pasa el nombre al HTML del portal
+                session['correo'] = user[0] #Se le pasa el correo al HTML del portal
+                return redirect(url_for('portal_participante'))
+            else: 
+                return "correo no valido" #Error en correo escrito o contraseña
+        else:
+            return "Correo no registrado"
+    return redirect(url_for('iniciar_sesion'))  
+
+# VERIFICA EL INICIO DE SESION DEL ENCUESTADOR
+@app.route("/logear-encuestador", methods = ['GET','POST'])
+def logear_encuestador():
     if request.method =='POST':
         email = request.form['usuario']
         password = request.form['contraseña']
-        a = "@encuestas.jookeez.com"
-        email = email+a
-        #print(email)
-        #print(password)
         cur = mysql.connection.cursor()
         cur.execute('SELECT * FROM Encuestadores WHERE correo = %s', [email])
         user = cur.fetchone()
@@ -268,57 +377,28 @@ def logear():
 
         if user is not None:
             if password == user[2]:
-                session['name'] = user[1] #Se le pasa el nombre al HTML del portal
+                session['nombre'] = user[1] #Se le pasa el nombre al HTML del portal
+                session['correo'] = user[3] #Se le pasa el correo al HTML del portal
                 return redirect(url_for('portal_encuestador'))
             else: 
-                return "correo y/o contraseña no valido" #Error en correo escrito o contraseña
+                return "Usuario y/o contraseña no validos." #Error en correo escrito o contraseña
         else:
-            return "Correo no registrado"        
-        cur.close()       
-        #if len(user)>0:
-        #return "Bienvenido :)"
-        #else:
-        #    return "Error, Correo y/o contraseña no valida"
+            return "Correo no registrado como encuestador."            
+    return redirect(url_for('iniciar_sesion_encuestador'))      
 
+# AL CERRAR SESION LOS DATOS DE LA SESION DE USUARIO SE ELIMINAN DE CACHE
+@app.route('/cerrar-sesion/')
+def cerrar_sesion():
+    session.clear()
+    return redirect(url_for("index"))
 
-    return redirect(url_for('iniciar_sesion_encuestador'))        
-
-#VERIFICA EL INICIO DE SESION DEL ENCUESTADOR
-@app.route("/logear-participante", methods = ['GET','POST'])
-def logear_participante():
-    if request.method =='POST':
-        email = request.form['correo']
-        #print(email)
-        #print(password)
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM Encuestados WHERE correo = %s', [email])
-        user = cur.fetchone()
-        cur.close()
-        #print(user[2])
-
-        if user is not None:
-            if email == user[0]:
-                session['name'] = user[1] #Se le pasa el nombre al HTML del portal
-                return redirect(url_for('portal_participante'))
-            else: 
-                return "correo no valido" #Error en correo escrito o contraseña
-        else:
-            return "Correo no registrado"
-        cur.close()       
-        #if len(user)>0:
-        #return "Bienvenido :)"
-        #else:
-        #    return "Error, Correo y/o contraseña no valida"
-
-    return redirect(url_for('iniciar_sesion'))  
-
-#EL ENCUESTADOR EDITA LA ENCUESTA DE LA BASE DE DATOS
+# EL ENCUESTADOR EDITA LA ENCUESTA DE LA BASE DE DATOS
 @app.route('/editar-encuesta/<int:id_encuesta>')
 def editar_encuesta(id_encuesta):
     data = id_encuesta
     return render_template("portal-encuestador-encuestas-editar.html", data=data)
 
-#EL ENCUESTADOR ELIMINA LA ENCUESTA DE LA BASE DE DATOS
+# EL ENCUESTADOR ELIMINA LA ENCUESTA DE LA BASE DE DATOS
 @app.route('/eliminar-encuesta/<int:id_encuesta>')
 def eliminar_encuesta(id_encuesta):
     cur = mysql.connection.cursor()
@@ -331,7 +411,7 @@ def eliminar_encuesta(id_encuesta):
 
 
 
-#PAGINAS QUE SOLO RETORNAN UN ARCHIVO HTML
+# PAGINAS QUE SOLO RETORNAN UN ARCHIVO HTML
 @app.route('/sprint1')
 def sprint1():
     return render_template("sprint1.html")
@@ -421,7 +501,7 @@ def portal_encuestador_ajustes():
 
 # ------------------ MANEJO DE ERRORES ------------------ #
 
-#MUESTRA LOS ERRORES CORRECTAMENTE
+# MUESTRA LOS ERRORES CORRECTAMENTE
 @app.errorhandler(400)
 def error_400(error):
     informacion = {
@@ -510,7 +590,7 @@ def error_503(error):
 
 
 
-#SIN ESTO NO VIVIMOS
+# SIN ESTO NO VIVIMOS
 if __name__ == '__main__':
     app.register_error_handler(400, error_400)
     app.register_error_handler(401, error_401)
