@@ -385,6 +385,7 @@ def logear_participante():
                 return redirect(url_for('portal_participante'))
             else: 
                 informacion = {
+                    'titulo_favicon': 'Error',
                     'titulo' : 'Error al iniciar sesion',
                     'descripcion' : 'Correo no valido'
                 } 
@@ -392,6 +393,7 @@ def logear_participante():
                  #Error en correo escrito o contraseña
         else:
             informacion = {
+                    'titulo_favicon': 'Error',
                     'titulo' : 'Error al iniciar sesion',
                     'descripcion' : 'Correo no registrado.'
                 } 
@@ -417,6 +419,7 @@ def logear_encuestador():
                 return redirect(url_for('portal_encuestador'))
             else:
                 informacion = {
+                    'titulo_favicon': 'Error',
                     'titulo' : 'Error al iniciar sesion',
                     'descripcion' : 'Usuario y/o contraseña no validos.'
                 } 
@@ -424,6 +427,7 @@ def logear_encuestador():
                  #Error en correo escrito o contraseña
         else:
             informacion = {
+                    'titulo_favicon': 'Error',
                     'titulo' : 'Error al iniciar sesion',
                     'descripcion' : 'Correo no registrado como encuestador.'
                 } 
