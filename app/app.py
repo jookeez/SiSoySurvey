@@ -418,6 +418,20 @@ def cerrar_sesion():
     session.clear()
     return redirect(url_for("index"))
 
+@app.route('/encuestas/<int:id_encuesta>')
+def responder_encuestas_aviso(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT nombre, descripcion FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
+    data = cur.fetchone()
+    cur.close()
+
+    informacion = {
+        'titulo_favicon': 'Encuesta de ' + data[0],
+        'titulo' : data[0],
+        'descripcion' : data[1]
+    }
+    return render_template("aviso.html", informacion=informacion)
+
 # NUEVO FORMULARIO DE ENCUESTAS
 @app.route('/encuestas/<int:id_encuesta>/<correo>')
 def responder_encuestas(id_encuesta,correo):
