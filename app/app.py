@@ -384,9 +384,18 @@ def logear_participante():
                 session['correo'] = user[0] #Se le pasa el correo al HTML del portal
                 return redirect(url_for('portal_participante'))
             else: 
-                return "correo no valido" #Error en correo escrito o contraseña
+                informacion = {
+                    'titulo' : 'Error al iniciar sesion',
+                    'descripcion' : 'Correo no valido'
+                } 
+                return render_template("aviso.html", informacion=informacion)
+                 #Error en correo escrito o contraseña
         else:
-            return "Correo no registrado"
+            informacion = {
+                    'titulo' : 'Error al iniciar sesion',
+                    'descripcion' : 'Correo no registrado.'
+                } 
+            return render_template("aviso.html", informacion=informacion)
     return redirect(url_for('iniciar_sesion'))  
 
 # VERIFICA EL INICIO DE SESION DEL ENCUESTADOR
@@ -406,10 +415,20 @@ def logear_encuestador():
                 session['nombre'] = user[1] #Se le pasa el nombre al HTML del portal
                 session['correo'] = user[3] #Se le pasa el correo al HTML del portal
                 return redirect(url_for('portal_encuestador'))
-            else: 
-                return "Usuario y/o contraseña no validos." #Error en correo escrito o contraseña
+            else:
+                informacion = {
+                    'titulo' : 'Error al iniciar sesion',
+                    'descripcion' : 'Usuario y/o contraseña no validos.'
+                } 
+                return render_template("aviso.html", informacion=informacion)
+                 #Error en correo escrito o contraseña
         else:
-            return "Correo no registrado como encuestador."            
+            informacion = {
+                    'titulo' : 'Error al iniciar sesion',
+                    'descripcion' : 'Correo no registrado como encuestador.'
+                } 
+            return render_template("aviso.html", informacion=informacion)
+                        
     return redirect(url_for('iniciar_sesion_encuestador'))      
 
 # AL CERRAR SESION LOS DATOS DE LA SESION DE USUARIO SE ELIMINAN DE CACHE
