@@ -8,7 +8,7 @@ Portal del Encuestador
 
 {% block body %}
 <div class="container">
-    <form action="/guardar_cambios_encuesta/{{id_encuesta}}" method="POST">
+    <form action="/guardar_encuesta/{{question_number}}" method="POST">
       <ul>
         <!--Bloque Datos-->
         <div class="shadow p-3 mb-5 bg-body rounded ">
@@ -18,13 +18,13 @@ Portal del Encuestador
             <label class="form-label">Titulo</label>
 
             <p>{{polls[0].1}}</p>
-            <input type="text" name="title" class="form-control" id="floatingInput" value="{{polls[0].1}}" >
+            
           </div>
           <div class="mb-3">
             <label class="form-label">Descripcion</label>
 
             <p>{{polls[0].2}}</p>
-            <input class="form-control" name="description" value="{{polls[0].2}}" id="floatingTextarea" ></input>
+            
           </div> 
         </div>
         {% set i = namespace(a=-1)  %}
@@ -34,18 +34,17 @@ Portal del Encuestador
           <div class="shadow p-3 mb-5 bg-body rounded">
             <h5>Pregunta  {{ loop.index }}</h5>
             <p>{{question.1}}</p>
-            <input type="text" name="Pregunta{{i.a}}" class="form-control" id="QInput{{i.a+1}}" value="{{question.1}}">
             
             <ul>
               <!--Bloque Items-->
               <li>
                 {{options[i.a].1}}
-                <input type="text" name="item1-{{i.a}}" class="form-control" id="I1Input{{i.a+1}}" value="{{options[i.a].1}}">
+                
               </li>
               {% set i.a= i.a + 1  %}
               <li>
                 {{options[i.a].1}}
-                <input type="text" name="item2-{{i.a}}" class="form-control" id="I2Input{{i.a+1}}" value="{{options[i.a].1}}">
+                
               </li>
             </ul>
             
@@ -53,10 +52,8 @@ Portal del Encuestador
         {% endfor %}
         <!--Bloque Datos-->
         <div class="shadow p-3 mb-5 bg-body rounded ">
-          
-          <button  class="btn btn-success btn-lg" type="submit" >Guardar</button>
-          <a href="/portal-encuestador-encuestas-visualizar/{{id_encuesta}}">
-            <button  class="btn btn-danger btn-lg" type="button" >Cancelar edición</button>
+          <a href="/portal-encuestador-encuestas-editar/{{polls[0].0}}">
+            <button  class="btn btn-success btn-lg" type="button" >Editar</button>
           </a>
           <a href="/portal-encuestador-encuestas-realizar">
             <button  class="btn btn-secondary btn-lg" type="button" >Volver</button>

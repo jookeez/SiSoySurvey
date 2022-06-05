@@ -278,7 +278,7 @@ def guardar_cambios_encuesta(id_encuesta):
             cur.execute(query)
             c=c+1
         mysql.connection.commit()
-        return redirect(url_for('visualizar_encuesta',id_encuesta))
+        return redirect(url_for('encuestas'))
 #-------------------------------
 
 

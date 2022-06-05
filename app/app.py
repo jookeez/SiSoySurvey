@@ -1,7 +1,8 @@
-from crypt import methods
+
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
+
 
 app = Flask(__name__)
 
@@ -12,7 +13,144 @@ app.config['MYSQL_PASSWORD'] = 'is2_gonzal0'
 app.config['MYSQL_DB'] = 'jookeezc_encuesta'
 mysql = MySQL(app)
 
+#------------------- Encuestas ---------------------------#
 
+#El usuario guarda la encuesta creada en la base de datos
+@app.route("/guardar_encuesta/<int:question_number>", methods=['POST'])
+def guardar_encuesta(question_number):
+
+    if request.method == 'POST':
+        
+        title=request.form['title']
+        description=request.form['description']
+        
+
+        cur = mysql.connection.cursor()
+        
+        cur.execute("INSERT INTO Encuestas (nombre,descripcion,preguntas,estado) VALUES (%s,%s,%s,'Por realizar')",(title,description,question_number))
+        cur.execute("SELECT LAST_INSERT_ID()")
+        
+
+        lastInsert = cur.fetchall()
+        code=lastInsert[0][0]
+
+        for i in range(0,question_number):
+            
+            question=request.form['Pregunta'+str(i)]
+            item1=request.form['item1-'+str(i)]
+            item2=request.form['item2-'+str(i)]
+
+            query="INSERT INTO Preguntas (id_encuesta,enunciado) VALUES ("+str(code)+",'"+question+"')"
+            cur.execute(query)
+
+            cur.execute("SELECT LAST_INSERT_ID()")
+            lastInsert = cur.fetchall()            
+            
+            query="INSERT INTO Alternativas (id_pregunta,descripcion) VALUES ("+str(lastInsert[0][0])+",'"+item1+"')"
+            cur.execute(query)
+            
+            query="INSERT INTO Alternativas (id_pregunta,descripcion) VALUES ("+str(lastInsert[0][0])+",'"+item2+"')"
+            print(query)
+            cur.execute(query)
+
+        mysql.connection.commit()
+        return redirect(url_for('portal_encuestador_encuestas_realizar'))
+#El usuario guarda los cambios hechos al editar una encuesta
+@app.route("/guardar_cambios_encuesta/<int:id_encuesta>", methods=['POST'])
+def guardar_cambios_encuesta(id_encuesta):
+    if request.method == 'POST':
+        
+        title=request.form['title']
+        description=request.form['description']
+        
+
+        cur = mysql.connection.cursor()
+        query="UPDATE Encuestas SET nombre='"+title+"',descripcion='"+description+"' WHERE id_encuesta ="+str(id_encuesta)
+        cur.execute(query)
+
+        cur.execute("SELECT P.id_pregunta FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+        questions=cur.fetchall()
+        c=0
+        for question in questions:
+            print('Pregunta'+str(c))
+            
+            question1=request.form['Pregunta'+str(c)]
+            print('item1-'+str(c))
+            
+            item1=request.form['item1-'+str(c)]
+            c=c+1
+            print('item2-'+str(c))
+            item2=request.form['item2-'+str(c)]
+            
+            query="UPDATE Preguntas SET enunciado='"+question1+"' WHERE id_pregunta ="+str(question[0])
+            print(query)
+            cur.execute(query)
+
+            cur.execute("SELECT A.id_alternativa,A.descripcion FROM Alternativas as A,Preguntas as P  WHERE A.id_pregunta= P.id_pregunta AND P.id_pregunta="+str(question[0]))
+            options=cur.fetchall()
+            
+            query="UPDATE Alternativas SET descripcion='"+item1+"' WHERE id_alternativa ="+str(options[0][0])
+            cur.execute(query)
+            query="UPDATE Alternativas SET descripcion='"+item2+"' WHERE id_alternativa ="+str(options[1][0])
+            cur.execute(query)
+            c=c+1
+        mysql.connection.commit()
+        return redirect(url_for('portal_encuestador_encuestas_realizar'))
+#-------------------------------
+
+
+
+#El usuario accede al portal de creacion de encuestas
+@app.route("/portal-encuestador-encuestas-crear/<int:question_number>")
+def nueva_encuesta(question_number):
+    return render_template("portal-encuestador-encuestas-crear.html",question_number=question_number)
+    
+
+#-------------------------------
+#El usuario puede editar toda la informacion de la encuesta 
+@app.route("/portal-encuestador-encuestas-editar/<id_encuesta>") 
+def editar_encuesta(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
+    polls = cur.fetchall()
+
+    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+    questions=cur.fetchall()
+
+    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
+    options=cur.fetchall()
+
+    return render_template("portal-encuestador-encuestas-editar.html"
+    ,polls=polls
+    ,questions=questions
+    ,options=options
+    ,id_encuesta=id_encuesta)
+
+
+
+#-------------------------------
+
+
+#El usuario puede visualizar la información de la encuesta
+@app.route("/portal-encuestador-encuestas-visualizar/<id_encuesta>") 
+def visualizar_encuesta(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
+    polls = cur.fetchall()
+
+    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+    questions=cur.fetchall()
+
+    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
+    options=cur.fetchall()
+
+    return render_template("portal-encuestador-encuestas-visualizar.html"
+    ,polls=polls
+    ,questions=questions
+    ,options=options
+    ,id_encuesta=id_encuesta)
+
+#-------------------------------
 
 
 # ------------------ CORREO ELECTRONICO ------------------ #
@@ -72,6 +210,10 @@ def confirmacion(nombre, correo):
 #ENVIAR ENCUESTAS POR CORREO A TODOS LOS PARTICIPANTES
 @app.route('/enviar-encuesta/<int:id_encuesta>')
 def enviar_encuesta(id_encuesta):
+    query="UPDATE Encuestas SET estado='Abierta',fecha_inicio=NOW() WHERE id_encuesta ="+str(id_encuesta)
+    cur = mysql.connection.cursor()
+    cur.execute(query)
+    
     cur = mysql.connection.cursor()
     cur.execute('SELECT e.nombre , e.correo FROM Encuestados as e')
     data = cur.fetchall()
@@ -89,6 +231,7 @@ def enviar_encuesta(id_encuesta):
         'texto_boton': "Volver",
         'enlace_boton': "javascript:history.back()"
     }
+    mysql.connection.commit()
     return render_template("aviso-boton.html", informacion=informacion)
 
 # ENVIA ENCUESTAS POR CORREO A LOS PARTICIPANTES
@@ -333,10 +476,10 @@ def ultimas_encuestas():
     return render_template("ultimas-encuestas.html", data=data)
 
 # EL ENCUESTADOR EDITA LA ENCUESTA DE LA BASE DE DATOS
-@app.route('/editar-encuesta/<int:id_encuesta>')
-def editar_encuesta(id_encuesta):
-    data = id_encuesta
-    return render_template("portal-encuestador-encuestas-editar.html", data=data)
+#@app.route('/editar-encuesta/<int:id_encuesta>')
+#def editar_encuesta(id_encuesta):
+    #data = id_encuesta
+    #return render_template("portal-encuestador-encuestas-editar.html", data=data)
 
 #ELIMINAR ALTERNATIVAS DE BASE DE DATOS
 @app.route('/eliminar-alternativas/<int:id_pregunta>')
@@ -568,9 +711,13 @@ def portal_encuestador_participantes_agregar():
 def portal_encuestador_encuestas_crear():
     return render_template("portal-encuestador-encuestas-crear.html")
 
-@app.route('/portal-encuestador-encuestas-editar')
-def portal_encuestador_encuestas_editar():
-    return render_template("portal-encuestador-encuestas-editar.html")
+@app.route('/portal-encuestador-encuestas-visualizar')
+def portal_encuestador_encuestas_visualizar():
+    return render_template("portal-encuestador-encuestas-visualizar.html")
+
+#@app.route('/portal-encuestador-encuestas-editar')
+#def portal_encuestador_encuestas_editar():
+#    return render_template("portal-encuestador-encuestas-editar.html")
 
 @app.route('/portal-encuestador-resultados')
 def portal_encuestador_resultados():
