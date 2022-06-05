@@ -16,11 +16,6 @@ Inicia sesión como Encuestador
       <div class="input-group mb-3">
         <input type="password" name="contraseña" class="form-control" id="floatingInput" placeholder="Contraseña" required>
       </div>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Recordarme
-        </label>
-      </div>
       <button class="w-100 btn btn-lg btn-primary mb-2" type="submit">Iniciar Sesión</button>
       <a href="{{ url_for('registrarse_encuestador')}}"><button type="button" class="w-100 btn btn-lg btn-dark mb-2">Regístrate como Encuestador</button></a>
       <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="w-100 btn btn-lg btn-outline-dark">Iniciar como Participante</button></a>

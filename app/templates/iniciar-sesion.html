@@ -13,11 +13,6 @@ Iniciar Sesión como Participante
         <input type="email" name="correo" class="form-control" id="floatingInput" placeholder="ejemplo@jookeez.com" required>
         <label for="floatingInput">Correo Electrónico</label>
       </div>   
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Recordarme
-        </label>
-      </div>
       <button class="w-100 btn btn-lg btn-primary mb-2" type="submit">Iniciar Sesión</button>
       <a href="{{ url_for('registrarse')}}"><button type="button" class="w-100 btn btn-lg btn-dark mb-2">Regístrate como Participante</button></a>
       <a href="{{ url_for('iniciar_sesion_encuestador')}}"><button type="button" class="w-100 btn btn-lg btn-outline-dark">Iniciar como Encuestador</button></a>
