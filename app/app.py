@@ -179,7 +179,7 @@ def portal_encuestador_encuestas_realizar():
     cur1 = mysql.connection.cursor()
     cur1.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Por realizar'")
     Ready = cur1.fetchall()
-    return render_template("portal-encuestador-encuestas-realizar.html", pollsReady=Ready)
+    return render_template("portal-encuestador-encuestas-realizar.html", Ready=Ready)
 
 # MUESTRA EL LISTADO DE ENCUESTAS ABIERTAS
 @app.route('/portal-encuestador-encuestas-abiertas')
@@ -187,7 +187,7 @@ def portal_encuestador_encuestas_abiertas():
     cur2 = mysql.connection.cursor()
     cur2.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado, E.fecha_inicio,E.fecha_fin,E.preguntas FROM Encuestas as E WHERE E.estado='Abierta'")
     Open = cur2.fetchall()
-    return render_template("portal-encuestador-encuestas-abiertas.html", pollsOpen=Open)
+    return render_template("portal-encuestador-encuestas-abiertas.html", Open=Open)
 
 # MUESTRA EL LISTADO DE ENCUESTAS FINALIZADAS
 @app.route('/portal-encuestador-encuestas-finalizadas')
@@ -338,16 +338,48 @@ def editar_encuesta(id_encuesta):
     data = id_encuesta
     return render_template("portal-encuestador-encuestas-editar.html", data=data)
 
+#ELIMINAR ALTERNATIVAS DE BASE DE DATOS
+@app.route('/eliminar-alternativas/<int:id_pregunta>')
+def elimina_alternativas(id_pregunta):
+
+    cur = mysql.connection.cursor() 
+    cur.execute('DELETE FROM Alternativas WHERE id_pregunta = %s',[id_pregunta])
+    mysql.connection.commit()
+    return 1
+
+#ELIMINAR PREGUNTAS DE BASE DE DATOS
+@app.route('/eliminar-preguntas/<int:id_encuesta>')
+def elimina_preguntas(id_encuesta):
+
+    cur = mysql.connection.cursor() 
+    cur.execute('SELECT p.id_pregunta FROM Preguntas as p WHERE p.id_encuesta  = %s',[id_encuesta])
+    row = cur.fetchall()
+
+    for i in row:
+        elimina_alternativas(i[0])
+
+    cur2 = mysql.connection.cursor() 
+    cur2.execute('DELETE FROM Preguntas WHERE id_encuesta = %s', [id_encuesta])
+    mysql.connection.commit()
+
+    return 1
+
 # EL ENCUESTADOR ELIMINA LA ENCUESTA DE LA BASE DE DATOS
-@app.route('/eliminar-encuesta/<int:id_encuesta>')
-def eliminar_encuesta(id_encuesta):
+# Tipo = abierta,cerrada, por_realizar
+@app.route('/eliminar-encuesta/<tipo>/<int:id_encuesta>')
+def eliminar_encuesta(tipo, id_encuesta):
+
+    curr = mysql.connection.cursor()
+    curr.execute('SELECT p.id_pregunta FROM Preguntas as p WHERE p.id_encuesta  = %s',[id_encuesta])
+    elimina_preguntas(id_encuesta)
     cur = mysql.connection.cursor()
     cur.execute('DELETE FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
     mysql.connection.commit()
-    return redirect(url_for('portal_encuestador_encuestas_finalizadas'))
 
-
-
+    if tipo == "abierta":      ret = redirect(url_for('portal_encuestador_encuestas_abiertas'))
+    if tipo == "cerrada":      ret = redirect(url_for('portal_encuestador_encuestas_finalizadas'))
+    if tipo == "por_realizar": ret = redirect(url_for('portal_encuestador_encuestas_realizar'))
+    return ret
 
 # ------------------ USO DE SESIONES ------------------ #
 
