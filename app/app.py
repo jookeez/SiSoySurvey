@@ -402,7 +402,7 @@ def dar_de_baja_encuestador(correo):
 @app.route("/portal-participante-encuestas-responder/<mail>")
 def encuestas_encuestado(mail):
     cur1 = mysql.connection.cursor()
-    cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Por realizar') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
+    cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Abierta') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
     data = cur1.fetchall()
     return render_template("portal-participante-encuestas-responder.html", data=data)
 
@@ -460,6 +460,10 @@ def responder_encuestas(id_encuesta,correo):
     data = cur.fetchone()
     cur.close()
 
+    curr = mysql.connection.cursor()
+    curr.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo,id_encuesta])
+    mysql.connection.commit()
+    
     informacion = {
         'nombre' : data[0],
         'descripcion' : data[1],
