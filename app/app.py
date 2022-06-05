@@ -100,10 +100,8 @@ def enviar_encuesta(id_encuesta):
     cur = mysql.connection.cursor()
     cur.execute('SELECT e.nombre , e.correo FROM Encuestados as e')
     data = cur.fetchall()
-    
     curr = mysql.connection.cursor()
     curr.execute('SELECT en.nombre FROM Encuestas as en WHERE id_encuesta = %s',[id_encuesta])
-
     name_encuesta = curr.fetchone()
 
     for row in data:
@@ -331,7 +329,6 @@ def portal_encuestador_encuestas_finalizadas():
     cur3.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado, E.fecha_inicio,E.fecha_fin,E.preguntas FROM Encuestas as E WHERE E.estado='Cerrada'" )
     Closed = cur3.fetchall()
     return render_template("portal-encuestador-encuestas-finalizadas.html", Closed=Closed)
-
 
 
 # VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE PUEDE RESPONDER
