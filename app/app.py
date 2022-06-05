@@ -93,6 +93,31 @@ def agregar_encuestador():
             }
             return render_template("aviso-boton.html", informacion=informacion)
 
+#ENVIAR ENCUESTAS POR CORREO A TODOS LOS PARTICIPANTES
+
+@app.route('/enviar-encuesta/<int:id_encuesta>')
+def enviar_encuesta(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT e.nombre , e.correo FROM Encuestados as e')
+    data = cur.fetchall()
+    
+    curr = mysql.connection.cursor()
+    curr.execute('SELECT en.nombre FROM Encuestas as en WHERE id_encuesta = %s',[id_encuesta])
+
+    name_encuesta = curr.fetchone()
+
+    for row in data:
+        enviar_mensaje(row[0],row[1],id_encuesta,name_encuesta[0])
+
+    informacion = {
+        'titulo_favicon': "Envío de encuestas",
+        'titulo': "¡Encuestas enviadas!",
+        'descripcion': "En unos momentos los participantes la recibirán en sus correos electrónicos.",
+        'texto_boton': "Volver",
+        'enlace_boton': "javascript:history.back()"
+    }
+    return render_template("aviso-boton.html", informacion=informacion)
+
 # ENVIA ENCUESTAS POR CORREO A LOS PARTICIPANTES
 @app.route('/enviar-mensaje/<nombre>/<correo>/<int:id_encuesta>/<encuesta>')
 def enviar_mensaje(nombre, correo, id_encuesta, encuesta):
@@ -109,14 +134,7 @@ def enviar_mensaje(nombre, correo, id_encuesta, encuesta):
     mensaje = Message(subject, sender=(enviar_nombre, enviar_mail), recipients=[correo])
     mensaje.html = render_template("mail.html", data=data)
     mail.send(mensaje)
-    informacion = {
-        'titulo_favicon': "Envío de encuestas",
-        'titulo': "¡Encuesta enviada!",
-        'descripcion': "En unos momentos el encuestado la recibirá en su correo electrónico.",
-        'texto_boton': "Volver",
-        'enlace_boton': "javascript:history.back()"
-    }
-    return render_template("aviso-boton.html", informacion=informacion)
+    return 1
 
 # EL USUARIO SE DA DE BAJA Y SE CONFIRMA SU DESUSCRIPCION
 @app.route('/desuscribir/<correo>')
@@ -127,10 +145,18 @@ def desuscribir(correo):
         'descripcion': "El correo " + correo + " fue dado de baja exitosamente."
     }
     cur = mysql.connection.cursor()
+    borrar_correo_tabla_responde(correo)
     cur.execute('DELETE FROM Encuestados WHERE correo = %s', [correo])
     mysql.connection.commit()
-
     return render_template("aviso.html", informacion=informacion)
+
+# SE ELIMINA DE LA BASE DE DATOS EL CORREO QUE PERTENECE A LA TABLA 'RESPONDE'
+@app.route('/borrar-correo-tabla-responde/<correo>')
+def borrar_correo_tabla_responde(correo):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM Responde WHERE correo = %s', [correo])
+    cur = mysql.connection.commit()
+    return 1 
 
 # EL USUARIO SE DA DE BAJA Y SE CONFIRMA SU DESUSCRIPCION
 @app.route('/dar-de-baja-encuestador/<correo>', methods=['POST'])
@@ -393,8 +419,8 @@ def cerrar_sesion():
     return redirect(url_for("index"))
 
 # NUEVO FORMULARIO DE ENCUESTAS
-@app.route('/encuestas/<int:id_encuesta>')
-def responder_encuestas(id_encuesta):
+@app.route('/encuestas/<int:id_encuesta>/<correo>')
+def responder_encuestas(id_encuesta,correo):
     cur = mysql.connection.cursor()
     cur.execute('SELECT nombre, descripcion, preguntas FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
     data = cur.fetchone()
