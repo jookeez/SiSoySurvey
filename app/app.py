@@ -31,8 +31,9 @@ mail = Mail(app)
 @app.route('/enviar-verificacion/', methods=['POST'])
 def enviar_verificacion():
     if request.method == 'POST':
-        nombre_form = request.form['nombre']
+        nombre = request.form['nombre']
         correo_form = request.form['correo']
+        nombre_form = procesar_texto(nombre)
         data = {
             'nombre': nombre_form,
             'correo': correo_form
@@ -61,7 +62,7 @@ def confirmacion(nombre, correo):
 
     informacion = {
         'titulo_favicon': "Cuenta verificada!",
-        'titulo': "¡" + nombre + ", eres oficialmente bienvenido!",
+        'titulo': "¡" + nombre_procesado + ", eres oficialmente bienvenido!",
         'descripcion': "Tu correo " + correo + " ha sido verificado exitosamente.",
         'texto_boton': "Iniciar Sesión",
         'enlace_boton': "/iniciar-sesion"
@@ -617,7 +618,7 @@ app.secret_key = "mysecretkey"
 def procesar_texto(palabra):
     caracteres_especiales = "!#$%^&*()|@¢∞¬÷≠¬´“”" 
     for caracter in caracteres_especiales:
-        palabra_sin_caracteres_especiales = palabra.replace(caracteres_especiales, '')
+        palabra_sin_caracteres_especiales = palabra.replace(caracter, '')
     palabra_con_espacios = palabra_sin_caracteres_especiales.replace('%20', ' ')
     print(palabra_con_espacios)
     return palabra_con_espacios
