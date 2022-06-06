@@ -1,7 +1,7 @@
 {% extends "./layout-portal-encuestador.html" %}
 
 {% block title %}
-Portal del Encuestador
+Crear Encuesta
 {% endblock %}
 
 {% block head %}{% endblock %}
@@ -20,49 +20,52 @@ active
 
 {% block body %}
 <div class="container">
-    <form action="/guardar_encuesta/{{question_number}}" method="POST">
-      <ul>
-        <!--Bloque Datos-->
-        <div class="shadow p-3 mb-5 bg-body rounded ">
-
-          <h1 class="display-5 fw-bold mb-3">Crear Encuesta</h1>
-          <div class="mb-3">
-            <label class="form-label">Titulo</label>
-            <input type="text" name="title" class="form-control" id="floatingInput" placeholder="Nueva encuesta Nacional" >
+  <form action="/guardar_encuesta/{{question_number}}" method="POST">
+    <div class="mini-contenedor">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold mb-3">Crear Encuesta</h1>
+        <div class="mb-3">
+          <h4 class="form-label">Título</h4>
+          <input type="text" name="title" class="form-control" required id="floatingInput" placeholder="Encuesta docente de las universidades en Chile" >
+        </div>
+        <div class="mb-3">
+          <h4 class="form-label">Descripción</h4>
+          <textarea class="form-control" name="description" required placeholder="Percepción de los alumnos sobre la forma de enseñar de los docentes de las universidades." id="floatingTextarea" ></textarea>
+        </div>
+        <!--Bloque Pregunta-->
+        <div class="mini-contenedor p-3 mb-3 mt-3">
+          {% for i in range(question_number)%}
+          <div class="container-fluid py-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">Pregunta {{i+1}}</span>
+              <input type="text" name="Pregunta{{i}}" class="form-control" id="QInput{{i+1}}" placeholder="¿Asistió regularmente a la universidad?" aria-label="Nombre" aria-describedby="basic-addon1">
+            </div>
+            <ol class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon2">Alternativa 1</span>
+              <input type="text" required name="item1-{{i}}" class="form-control" id="I1Input{{i+1}}" placeholder="Si" required aria-label="Respuesta1" aria-describedby="basic-addon2">
+            </ol>
+            <ol class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon3">Alternativa 2</span>
+              <input type="text" required name="item2-{{i}}" class="form-control" id="I2Input{{i+1}}" placeholder="No" required aria-label="Respuesta2" aria-describedby="basic-addon3">
+            </ol>
           </div>
-          <div class="mb-3">
-            <label class="form-label">Descripcion</label>
-            <textarea class="form-control" name="description" placeholder="Esta es una encuesta muy nacional, sobre cosas nacionales." id="floatingTextarea" ></textarea>
-          </div>
+          {% endfor %}
           <a href="/portal-encuestador-encuestas-crear/{{question_number + 1}}">
-            <button class="btn btn-primary btn-lg" type="button">Agregar Pregunta</button>
+            <button class="btn btn-success btn-lg" type="button">Añadir Pregunta</button>
           </a>
-          
+          {% if question_number > 1 %}
+          <a href="/portal-encuestador-encuestas-crear/{{question_number - 1}}">
+            <button class="btn btn-danger btn-lg" type="button">Eliminar Pregunta</button>
+          </a>
+          {% else %}
+          <a href="#">
+            <button class="btn btn-danger btn-lg" disabled type="button">Eliminar Pregunta</button>
+          </a>
+          {% endif %}
         </div>
-        {% for i in range(question_number)%}
-          <!--Bloque Pregunta-->
-          <div class="shadow p-3 mb-5 bg-body rounded">
-            <h5>Pregunta {{i+1}}</h5>
-            <input type="text" name="Pregunta{{i}}" class="form-control" id="QInput{{i+1}}" placeholder="¿Mañana estará soleado?">
-            <ul>
-              <!--Bloque Items-->
-              <li>
-                <input type="text" name="item1-{{i}}" class="form-control" id="I1Input{{i+1}}" placeholder="Si" required>
-              </li>
-              <li>
-                <input type="text" name="item2-{{i}}" class="form-control" id="I2Input{{i+1}}" placeholder="No" required>
-              </li>
-            </ul>
-          </div>
-        {% endfor %}
-        <!--Bloque Datos-->
-        <div class="shadow p-3 mb-5 bg-body rounded ">
-          <button  class="btn btn-success btn-lg" type="submit" >Guardar</button>
-        </div>
-      </ul>
-    </form>
-  </div>
-
-
-
+        <button class="btn btn-primary btn-lg mt-2" type="submit">Guardar Encuesta</button>
+      </div>
+    </div>
+  </form>
+</div>
 {% endblock %}

@@ -38,13 +38,13 @@ active
                 <tbody>
                     {% for pollc in Closed %}
                     <tr>
-                        <td name="code" scope="col"><b>{{pollc.0}}</b></td>
-                        <td name="title" scope="col">{{pollc.1}}</td>
-                        <td name="description" scope="col">{{pollc.2}}</td>
-                        <td scope="col">{{pollc.4}}</td>
-                        <td scope="col">{{pollc.5}}</td>
-                        <td scope="col">{{pollc.6}}</td>
-                        <td scope="col" class="td-finalizadas">
+                        <td>{{pollc.0}}</td>
+                        <td>{{pollc.1}}</td>
+                        <td>{{pollc.2}}</td>
+                        <td>{{pollc.4}}</td>
+                        <td>{{pollc.5}}</td>
+                        <td>{{pollc.6}}</td>
+                        <td class="td-finalizadas">
                             <a class="btn btn-success a-botones" href="/portal-encuestador-encuestas-visualizar/{{ pollc.0 }}">Ver</a>
                             <a class="btn btn-danger a-botones" href="/eliminar-encuesta/cerrada/{{ pollc.0 }}">Eliminar</a>
                         </td>
