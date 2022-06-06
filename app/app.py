@@ -430,18 +430,27 @@ def responder_encuestas(id_encuesta,correo):
     cur = mysql.connection.cursor()
     cur.execute('SELECT nombre, descripcion, preguntas FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
     data = cur.fetchone()
-    cur.close()
 
-    curr = mysql.connection.cursor()
-    curr.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo,id_encuesta])
-    mysql.connection.commit()
+    cur.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo,id_encuesta])
     
+    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+    questions=cur.fetchall()
+    
+    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
+    options=cur.fetchall()    
+    
+
+    cur.close()
+    mysql.connection.commit()
     informacion = {
         'nombre' : data[0],
         'descripcion' : data[1],
         'preguntas' : data[2]
     }
-    return render_template("responde.html", informacion=informacion)
+    return render_template("responde.html"
+    ,informacion=informacion
+    ,questions=questions
+    ,options=options) 
 
 #PODEMOS VER LAS ULTIMAS ENCUESTAS QUE ESTAN ABIERTAS
 @app.route('/ultimas-encuestas')
@@ -495,9 +504,12 @@ def eliminar_encuesta(tipo, id_encuesta):
     cur.execute('DELETE FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
     mysql.connection.commit()
 
-    if tipo == "abierta":      ret = redirect(url_for('portal_encuestador_encuestas_abiertas'))
-    if tipo == "cerrada":      ret = redirect(url_for('portal_encuestador_encuestas_finalizadas'))
-    if tipo == "por_realizar": ret = redirect(url_for('portal_encuestador_encuestas_realizar'))
+    if tipo == "abierta":      
+        ret = redirect(url_for('portal_encuestador_encuestas_abiertas'))
+    elif tipo == "cerrada":      
+        ret = redirect(url_for('portal_encuestador_encuestas_finalizadas'))
+    elif tipo == "por_realizar": 
+        ret = redirect(url_for('portal_encuestador_encuestas_realizar'))
     return ret
 
 # ------------------ USO DE SESIONES ------------------ #
