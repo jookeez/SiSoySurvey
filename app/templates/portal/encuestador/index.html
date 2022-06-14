@@ -1,0 +1,25 @@
+{% extends "layout/portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block active_portal %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="mini-contenedor">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Hola {{ session['nombre'] }}</h1>
+            <p for="basic-url" class="form-label mb-4">Aquí puedes ver un resumen de tus actividades.</p>
+        </div>
+        <div class="container-fluid py-5">
+            <h2 class="display-5 fw-bold mb-3">Sin actividades.</h2>
+        </div>
+    </div>
+</div>
+{% endblock %}

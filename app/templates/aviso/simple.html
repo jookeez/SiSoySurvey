@@ -1,0 +1,21 @@
+{% extends "layout/principal.html" %}
+
+{% block title %}
+{{ informacion.titulo_favicon }}
+{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<!-- CONTENIDO -->
+<section>
+  <main class="container p-3">
+      <div class="bg-light p-5 rounded">
+        <h1>{{ informacion.titulo }}</h1>
+        <p class="lead">{{ informacion.descripcion }}</p>
+      </div>
+    </main>
+</section>
+{% endblock %}
