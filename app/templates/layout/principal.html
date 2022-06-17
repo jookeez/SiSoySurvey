@@ -24,10 +24,17 @@
               <li><a href="{{ url_for('ultimas_encuestas')}}" class="nav-link nav-enlace px-2">Últimas Encuestas</a></li>
               <li><a href="{{ url_for('terminos')}}" class="nav-link nav-enlace px-2">Términos</a></li>
             </ul>
+            {% if 'portal' in session %}
+            <div class="text-end">
+              <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="btn btn-outline-light me-2">Hola {{ session['nombre'] }}</button></a>
+              <a href="{{ url_for('cerrar_sesion')}}"><button type="button" class="btn btn-warning">Cerrar Sesión</button></a>
+            </div>
+            {% else %}
             <div class="text-end">
               <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar Sesión</button></a>
               <a href="{{ url_for('registrarse')}}"><button type="button" class="btn btn-warning">Registrarse</button></a>
             </div>
+            {% endif %}
           </div>
         </div>
       </header>

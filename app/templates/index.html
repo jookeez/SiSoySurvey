@@ -92,6 +92,17 @@ Inicio
 <!-- HEROES -->
 <section>
 <div class="bg-dark text-secondary px-4 py-5 text-center">
+  {% if 'portal' in session %}
+  <div class="py-5">
+    <h1 class="display-5 fw-bold text-white">¡Es un gusto que seas participante!</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="fs-5 mb-4">Gracias a ti y a cientos de personas que se han suscrito, hemos podido conocer y mejorar la calidad de las preguntas en las encuestas.<br>¡Tu opinión cada vez es más valiosa!</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <a href="{{ url_for('ultimas_encuestas')}}"><button type="button" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Revisa las últimas encuestas</button></a>
+      </div>
+    </div>
+  </div>
+  {% else %}
   <div class="py-5">
     <h1 class="display-5 fw-bold text-white">¿Te convenciste de participar?</h1>
     <div class="col-lg-6 mx-auto">
@@ -102,6 +113,7 @@ Inicio
       </div>
     </div>
   </div>
+  {% endif %}
 </div>
 </section>
 {% endblock %}

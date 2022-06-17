@@ -14,9 +14,13 @@ def responder_encuestas_aviso(id_encuesta):
     informacion = {
         'titulo_favicon': 'Encuesta de ' + data[0],
         'titulo' : data[0],
-        'descripcion' : data[1]
+        'descripcion' : data[1] + ' Para contestar esta encuesta, debes acceder como participante.',
+        'texto_boton_izq' : 'Iniciar Sesión como Participante',
+        'enlace_boton_izq' : '/iniciar-sesion',
+        'texto_boton_der' : 'Regístrate como Participante',
+        'enlace_boton_der' : '/registrarse'
     }
-    return render_template("aviso/simple.html", informacion=informacion)
+    return render_template("aviso/botones.html", informacion=informacion)
 
 # NUEVO FORMULARIO DE ENCUESTAS
 @app.route('/encuestas/<int:id_encuesta>/<correo>')
