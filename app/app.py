@@ -121,6 +121,25 @@ def visualizar_encuesta(id_encuesta):
     cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
     options=cur.fetchall()
 
+    return render_template("portal-encuestador-encuestas-visualizar.html"
+    ,polls=polls
+    ,questions=questions
+    ,options=options
+    ,id_encuesta=id_encuesta)
+
+
+@app.route("/portal-encuestador-visualizar-resultados/<id_encuesta>") 
+def visualizar_resultados(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
+    polls = cur.fetchall()
+
+    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+    questions=cur.fetchall()
+
+    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
+    options=cur.fetchall()
+
     values = []
 
     print("OPTIONS")
@@ -129,10 +148,7 @@ def visualizar_encuesta(id_encuesta):
         values.append(resultados_alternativa(f[0]))
 
     print(values)
-    
-
-
-    return render_template("portal-encuestador-encuestas-visualizar.html"
+    return render_template("portal-encuestador-visualizar-resultados.html"
     ,polls=polls
     ,questions=questions
     ,options=options
