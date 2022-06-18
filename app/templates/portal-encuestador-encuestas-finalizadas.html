@@ -27,23 +27,23 @@ active
             <table class="table" class="scrollbar .scrollbar-danger">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th class="ocultar-id">ID</th>
                         <th>Titulo</th>
-                        <th>Descripción</th>
-                        <th>Fecha apertura</th>
-                        <th>Fecha cierre</th>
-                        <th>Preguntas</th>
+                        <th class="ocultar-descripcion">Descripción</th>
+                        <th class="ocultar-fecha">Fecha apertura</th>
+                        <th class="ocultar-fecha">Fecha cierre</th>
+                        <th class="ocultar-preguntas ocultar">Preguntas</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for pollc in Closed %}
                     <tr>
-                        <td>{{pollc.0}}</td>
+                        <td class="ocultar-id">{{pollc.0}}</td>
                         <td>{{pollc.1}}</td>
-                        <td>{{pollc.2}}</td>
-                        <td>{{pollc.4}}</td>
-                        <td>{{pollc.5}}</td>
-                        <td>{{pollc.6}}</td>
+                        <td class="ocultar-descripcion">{{pollc.2}}</td>
+                        <td class="ocultar-fecha">{{pollc.4}}</td>
+                        <td class="ocultar-fecha">{{pollc.5}}</td>
+                        <td class="ocultar-preguntas ocultar">{{pollc.6}}</td>
                         <td class="td-finalizadas">
                             <a class="btn btn-success a-botones" href="/portal-encuestador-visualizar-resultados/{{ pollc.0 }}">Ver</a>
                             <a class="btn btn-danger a-botones" href="/eliminar-encuesta/cerrada/{{ pollc.0 }}">Eliminar</a>

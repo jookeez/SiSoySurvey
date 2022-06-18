@@ -28,16 +28,16 @@ active
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Correo electrónico</th>
+                        <th class="ocultar-nombre">Nombre</th>
+                        <th class="ocultar-correo">Correo electrónico</th>
                     </tr>
                 </thead>
                 <tbody>
                 {% for encuestado in encuestados %}
                     <tr> 
-                        <td>{{ encuestado.1 }}</td>
-                        <td>{{ encuestado.0 }}</td>
-                        <td> 
+                        <td class="ocultar-nombre">{{ encuestado.1 }}</td>
+                        <td class="ocultar-correo">{{ encuestado.0 }}</td>
+                        <td class="ocultar-boton"> 
                             <a class="btn btn-danger" href="/desuscribir/{{ encuestado.0 }}">Eliminar</a>
                         </td>
                     </tr>

@@ -73,7 +73,7 @@ td {
 }
 
 .td-realizar {
-    width: 262px;
+    width: 245px;
 }
 
 .td-abiertas {
@@ -81,7 +81,7 @@ td {
 }
 
 .td-finalizadas {
-    width: 183px;
+    width: 166px;
 }
 
 .a-botones {
@@ -154,4 +154,125 @@ td {
 .dropdown-item:focus {
     background-color: #ffc107 !important;
     color: #000 !important;
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .ocultar,
+    .ocultar-id, 
+    .ocultar-estado {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .ocultar-id, 
+    .ocultar-estado, 
+    .ocultar-fecha,
+    .ocultar-preguntas,
+    .ocultar-nombre {
+        display: none;
+    }
+    .td-realizar,
+    .td-abiertas,
+    .td-finalizadas {
+        width: 100px;
+    }
+    .a-botones {
+        margin: 2px;
+        width: 100%;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .principal {
+        display: block;
+    }
+    .menu-lateral {
+        width: 100%;
+        height: min-content;
+        position: relative;
+    }
+    .contenedor-derecho {
+        margin-left: 0;
+    }
+    .ocultar-id, 
+    .ocultar-estado, 
+    .ocultar-preguntas,
+    .ocultar-fecha,
+    .ocultar-nombre {
+        display: none;
+    }
+    .td-realizar,
+    .td-abiertas,
+    .td-finalizadas {
+        width: 100px;
+    }
+    .a-botones {
+        margin: 2px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 575px) {
+    .container {
+        max-width: 100%;
+    }
+    .mini-contenedor {
+        padding: 0 1rem;
+        margin: 1rem 0;
+    }
+    .principal {
+        display: block;
+    }
+    .menu-lateral {
+        width: 100%;
+        height: min-content;
+        position: relative;
+    }
+    .contenedor-derecho {
+        margin-left: 0;
+    }
+    .principal {
+        display: block;
+    }
+    .menu-lateral {
+        width: 100%;
+        height: min-content;
+        position: relative;
+    }
+    .contenedor-derecho {
+        margin-left: 0;
+    }
+    .ocultar-id, 
+    .ocultar-descripcion, 
+    .ocultar-estado, 
+    .ocultar-fecha,
+    .ocultar-preguntas,
+    .ocultar-nombre,
+    .ocultar-boton {
+        display: none;
+    }
+    .td-realizar,
+    .td-abiertas,
+    .td-finalizadas {
+        width: 100px;
+    }
+    .a-botones {
+        margin: 2px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .btn-responsive {
+        margin: 3px;
+        width: 100%;
+    }
+    .input-group-text {
+        width: 100%;
+    }
 }

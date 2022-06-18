@@ -34,6 +34,7 @@ active
         </div>
         <!--Bloque Pregunta-->
         <div class="mini-contenedor p-3 mb-3 mt-3">
+          <h4 class="form-label">Preguntas</h4>
           {% for i in range(question_number)%}
           <div class="container-fluid py-3">
             <div class="input-group mb-3">
@@ -51,19 +52,19 @@ active
           </div>
           {% endfor %}
           <a href="/portal-encuestador-encuestas-crear/{{question_number + 1}}">
-            <button class="btn btn-success btn-lg" type="button">Añadir Pregunta</button>
+            <button class="btn btn-responsive btn-success btn-lg" type="button">Añadir</button>
           </a>
           {% if question_number > 1 %}
           <a href="/portal-encuestador-encuestas-crear/{{question_number - 1}}">
-            <button class="btn btn-danger btn-lg" type="button">Eliminar Pregunta</button>
+            <button class="btn btn-responsive btn-danger btn-lg" type="button">Eliminar</button>
           </a>
           {% else %}
           <a href="#">
-            <button class="btn btn-danger btn-lg" disabled type="button">Eliminar Pregunta</button>
+            <button class="btn btn-responsive btn-danger btn-lg" disabled type="button">Eliminar</button>
           </a>
           {% endif %}
         </div>
-        <button class="btn btn-primary btn-lg mt-2" type="submit">Guardar Encuesta</button>
+        <button class="btn btn-responsive btn-primary btn-lg mt-2" type="submit">Guardar Encuesta</button>
       </div>
     </div>
   </form>

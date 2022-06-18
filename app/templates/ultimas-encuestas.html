@@ -18,20 +18,20 @@
           <thead>
               <tr>
                   <th>Titulo</th>
-                  <th>Descripción</th>
-                  <th>Fecha Inicio</th>
-                  <th>Fecha Término</th>
-                  <th>Preguntas</th>
+                  <th class="ocultar-descripcion">Descripción</th>
+                  <th class="ocultar-fecha">Fecha Inicio</th>
+                  <th class="ocultar-fecha">Fecha Término</th>
+                  <th class="ocultar-preguntas">Preguntas</th>
               </tr>
           </thead>
           <tbody>
             {% for d in data %}
             <tr>
               <th>{{ d.1 }}</th>
-              <td>{{ d.2 }}</td>
-              <td class="min-width">{{ d.3 }}</td>
-              <td class="min-width">{{ d.4 }}</td>
-              <td>{{ d.5 }}</td>
+              <td class="ocultar-descripcion">{{ d.2 }}</td>
+              <td class="min-width ocultar-fecha">{{ d.3 }}</td>
+              <td class="min-width ocultar-fecha">{{ d.4 }}</td>
+              <td class="ocultar-preguntas">{{ d.5 }}</td>
               <td class="td-realizar">
                   <a href="/encuestas/{{ d.0 }}" class="btn btn-primary a-botones">Responder</a>
               </td>
