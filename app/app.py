@@ -431,6 +431,7 @@ def responder_encuestas(id_encuesta,correo):
     cur.execute('SELECT nombre, descripcion, preguntas FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
     data = cur.fetchone()
 
+    #Deberia ir al momento que Participante envìa la Encuesta con sus respuestas
     cur.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo,id_encuesta])
     
     cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
