@@ -144,10 +144,8 @@ def visualizar_resultados(id_encuesta):
 
     print("OPTIONS")
     for f in options:
-        print(f[0])
         values.append(resultados_alternativa(f[0]))
 
-    print(values)
     return render_template("portal-encuestador-visualizar-resultados.html"
     ,polls=polls
     ,questions=questions
