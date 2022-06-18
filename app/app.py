@@ -11,150 +11,6 @@ app.config['MYSQL_PASSWORD'] = 'is2_gonzal0'
 app.config['MYSQL_DB'] = 'jookeezc_encuesta'
 mysql = MySQL(app)
 
-#------------------- Encuestas ---------------------------#
-
-#El usuario guarda la encuesta creada en la base de datos
-@app.route("/guardar_encuesta/<int:question_number>", methods=['POST'])
-def guardar_encuesta(question_number):
-    if request.method == 'POST':
-        title=request.form['title']
-        description=request.form['description']
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO Encuestas (nombre,descripcion,preguntas,estado) VALUES (%s,%s,%s,'Por realizar')",(title,description,question_number))
-        cur.execute("SELECT LAST_INSERT_ID()")
-        lastInsert = cur.fetchall()
-        code=lastInsert[0][0]
-
-        for i in range(0,question_number):
-            question=request.form['Pregunta'+str(i)]
-            item1=request.form['item1-'+str(i)]
-            item2=request.form['item2-'+str(i)]
-            query="INSERT INTO Preguntas (id_encuesta,enunciado) VALUES ("+str(code)+",'"+question+"')"
-            cur.execute(query)
-            cur.execute("SELECT LAST_INSERT_ID()")
-            lastInsert = cur.fetchall()            
-            query="INSERT INTO Alternativas (id_pregunta,descripcion) VALUES ("+str(lastInsert[0][0])+",'"+item1+"')"
-            cur.execute(query)
-            query="INSERT INTO Alternativas (id_pregunta,descripcion) VALUES ("+str(lastInsert[0][0])+",'"+item2+"')"
-            cur.execute(query)
-        mysql.connection.commit()
-        return redirect(url_for('portal_encuestador_encuestas_realizar'))
-
-#El usuario guarda los cambios hechos al editar una encuesta
-@app.route("/guardar_cambios_encuesta/<int:id_encuesta>", methods=['POST'])
-def guardar_cambios_encuesta(id_encuesta):
-    if request.method == 'POST':
-        title=request.form['title']
-        description=request.form['description']
-        cur = mysql.connection.cursor()
-        query="UPDATE Encuestas SET nombre='"+title+"',descripcion='"+description+"' WHERE id_encuesta ="+str(id_encuesta)
-        cur.execute(query)
-        cur.execute("SELECT P.id_pregunta FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
-        questions=cur.fetchall()
-        c=0
-        for question in questions:
-            question1=request.form['Pregunta'+str(c)]
-            item1=request.form['item1-'+str(c)]
-            c=c+1
-            item2=request.form['item2-'+str(c)]
-            query="UPDATE Preguntas SET enunciado='"+question1+"' WHERE id_pregunta ="+str(question[0])
-            cur.execute(query)
-            cur.execute("SELECT A.id_alternativa,A.descripcion FROM Alternativas as A,Preguntas as P  WHERE A.id_pregunta= P.id_pregunta AND P.id_pregunta="+str(question[0]))
-            options=cur.fetchall()
-            query="UPDATE Alternativas SET descripcion='"+item1+"' WHERE id_alternativa ="+str(options[0][0])
-            cur.execute(query)
-            query="UPDATE Alternativas SET descripcion='"+item2+"' WHERE id_alternativa ="+str(options[1][0])
-            cur.execute(query)
-            c=c+1
-        mysql.connection.commit()
-        return redirect(url_for('portal_encuestador_encuestas_realizar'))
-#-------------------------------
-
-
-
-#El usuario accede al portal de creacion de encuestas
-@app.route("/portal-encuestador-encuestas-crear/<int:question_number>")
-def nueva_encuesta(question_number):
-    return render_template("portal-encuestador-encuestas-crear.html",question_number=question_number)
-    
-
-#-------------------------------
-#El usuario puede editar toda la informacion de la encuesta 
-@app.route("/portal-encuestador-encuestas-editar/<id_encuesta>") 
-def editar_encuesta(id_encuesta):
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
-    polls = cur.fetchall()
-
-    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
-    questions=cur.fetchall()
-
-    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
-    options=cur.fetchall()
-
-    return render_template("portal-encuestador-encuestas-editar.html"
-    ,polls=polls
-    ,questions=questions
-    ,options=options
-    ,id_encuesta=id_encuesta)
-
-
-
-#-------------------------------
-@app.route('/resultados-alternativa')
-def resultados_alternativa(id_alternativa):
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT COUNT(id_alternativa) FROM Respuestas as r WHERE r.id_alternativa =%s",[id_alternativa])
-    a = cur.fetchone()
-    return a[0]
-
-#El usuario puede visualizar la información de la encuesta
-@app.route("/portal-encuestador-encuestas-visualizar/<id_encuesta>") 
-def visualizar_encuesta(id_encuesta):
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
-    polls = cur.fetchall()
-
-    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
-    questions=cur.fetchall()
-
-    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
-    options=cur.fetchall()
-
-    return render_template("portal-encuestador-encuestas-visualizar.html"
-    ,polls=polls
-    ,questions=questions
-    ,options=options
-    ,id_encuesta=id_encuesta)
-
-
-@app.route("/portal-encuestador-visualizar-resultados/<id_encuesta>") 
-def visualizar_resultados(id_encuesta):
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
-    polls = cur.fetchall()
-
-    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
-    questions=cur.fetchall()
-
-    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
-    options=cur.fetchall()
-
-    values = []
-
-    print("OPTIONS")
-    for f in options:
-        values.append(resultados_alternativa(f[0]))
-
-    return render_template("portal-encuestador-visualizar-resultados.html"
-    ,polls=polls
-    ,questions=questions
-    ,options=options
-    ,id_encuesta=id_encuesta,values=values)
-
-#-------------------------------
-
-
 # ------------------ CORREO ELECTRONICO ------------------ #
 
 # CONEXION SMTP PARA ENVIO DE CORREOS
@@ -395,6 +251,73 @@ def dar_de_baja_encuestador(correo):
     else:
         return redirect(url_for('portal_encuestador_perfil'))
 
+#El usuario puede visualizar la información de la encuesta
+@app.route("/portal-encuestador-encuestas-visualizar/<id_encuesta>") 
+def visualizar_encuesta(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
+    polls = cur.fetchall()
+
+    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+    questions=cur.fetchall()
+
+    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
+    options=cur.fetchall()
+
+    return render_template("portal-encuestador-encuestas-visualizar.html"
+    ,polls=polls
+    ,questions=questions
+    ,options=options
+    ,id_encuesta=id_encuesta)
+
+
+@app.route("/portal-encuestador-visualizar-resultados/<id_encuesta>") 
+def visualizar_resultados(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
+    polls = cur.fetchall()
+
+    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+    questions=cur.fetchall()
+
+    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
+    options=cur.fetchall()
+
+    values = []
+
+    for f in options:
+        values.append(resultados_alternativa(f[0]))
+
+    return render_template("portal-encuestador-visualizar-resultados.html"
+    ,polls=polls
+    ,questions=questions
+    ,options=options
+    ,id_encuesta=id_encuesta,values=values)
+
+#El usuario accede al portal de creacion de encuestas
+@app.route("/portal-encuestador-encuestas-crear/<int:question_number>")
+def nueva_encuesta(question_number):
+    return render_template("portal-encuestador-encuestas-crear.html",question_number=question_number)
+    
+#El usuario puede editar toda la informacion de la encuesta 
+@app.route("/portal-encuestador-encuestas-editar/<id_encuesta>") 
+def editar_encuesta(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
+    polls = cur.fetchall()
+
+    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+    questions=cur.fetchall()
+
+    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
+    options=cur.fetchall()
+
+    return render_template("portal-encuestador-encuestas-editar.html"
+    ,polls=polls
+    ,questions=questions
+    ,options=options
+    ,id_encuesta=id_encuesta)
+
 
 
 
@@ -470,7 +393,6 @@ def responder_encuestas(id_encuesta,correo):
     
     cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
     options=cur.fetchall()    
-    
 
     cur.close()
     mysql.connection.commit()
@@ -560,6 +482,72 @@ def eliminar_encuesta(tipo, id_encuesta):
     elif tipo == "por_realizar": 
         ret = redirect(url_for('portal_encuestador_encuestas_realizar'))
     return ret
+
+#El usuario guarda la encuesta creada en la base de datos
+@app.route("/guardar_encuesta/<int:question_number>", methods=['POST'])
+def guardar_encuesta(question_number):
+    if request.method == 'POST':
+        title=request.form['title']
+        description=request.form['description']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO Encuestas (nombre,descripcion,preguntas,estado) VALUES (%s,%s,%s,'Por realizar')",(title,description,question_number))
+        cur.execute("SELECT LAST_INSERT_ID()")
+        lastInsert = cur.fetchall()
+        code=lastInsert[0][0]
+
+        for i in range(0,question_number):
+            question=request.form['Pregunta'+str(i)]
+            item1=request.form['item1-'+str(i)]
+            item2=request.form['item2-'+str(i)]
+            query="INSERT INTO Preguntas (id_encuesta,enunciado) VALUES ("+str(code)+",'"+question+"')"
+            cur.execute(query)
+            cur.execute("SELECT LAST_INSERT_ID()")
+            lastInsert = cur.fetchall()            
+            query="INSERT INTO Alternativas (id_pregunta,descripcion) VALUES ("+str(lastInsert[0][0])+",'"+item1+"')"
+            cur.execute(query)
+            query="INSERT INTO Alternativas (id_pregunta,descripcion) VALUES ("+str(lastInsert[0][0])+",'"+item2+"')"
+            cur.execute(query)
+        mysql.connection.commit()
+        return redirect(url_for('portal_encuestador_encuestas_realizar'))
+
+#El usuario guarda los cambios hechos al editar una encuesta
+@app.route("/guardar_cambios_encuesta/<int:id_encuesta>", methods=['POST'])
+def guardar_cambios_encuesta(id_encuesta):
+    if request.method == 'POST':
+        title=request.form['title']
+        description=request.form['description']
+        cur = mysql.connection.cursor()
+        query="UPDATE Encuestas SET nombre='"+title+"',descripcion='"+description+"' WHERE id_encuesta ="+str(id_encuesta)
+        cur.execute(query)
+        cur.execute("SELECT P.id_pregunta FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+        questions=cur.fetchall()
+        c=0
+        for question in questions:
+            question1=request.form['Pregunta'+str(c)]
+            item1=request.form['item1-'+str(c)]
+            c=c+1
+            item2=request.form['item2-'+str(c)]
+            query="UPDATE Preguntas SET enunciado='"+question1+"' WHERE id_pregunta ="+str(question[0])
+            cur.execute(query)
+            cur.execute("SELECT A.id_alternativa,A.descripcion FROM Alternativas as A,Preguntas as P  WHERE A.id_pregunta= P.id_pregunta AND P.id_pregunta="+str(question[0]))
+            options=cur.fetchall()
+            query="UPDATE Alternativas SET descripcion='"+item1+"' WHERE id_alternativa ="+str(options[0][0])
+            cur.execute(query)
+            query="UPDATE Alternativas SET descripcion='"+item2+"' WHERE id_alternativa ="+str(options[1][0])
+            cur.execute(query)
+            c=c+1
+        mysql.connection.commit()
+        return redirect(url_for('portal_encuestador_encuestas_realizar'))
+
+@app.route('/resultados-alternativa')
+def resultados_alternativa(id_alternativa):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT COUNT(id_alternativa) FROM Respuestas as r WHERE r.id_alternativa =%s",[id_alternativa])
+    a = cur.fetchone()
+    return a[0]
+
+
+
 
 # ------------------ USO DE SESIONES ------------------ #
 
@@ -754,7 +742,10 @@ def portal_encuestador_encuestas_visualizar():
 
 @app.route('/portal-encuestador-resultados')
 def portal_encuestador_resultados():
-    return render_template("portal-encuestador-resultados.html")
+    cur3 = mysql.connection.cursor()
+    cur3.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado, E.fecha_inicio,E.fecha_fin,E.preguntas FROM Encuestas as E WHERE E.estado='Cerrada'" )
+    Closed = cur3.fetchall()
+    return render_template("portal-encuestador-resultados.html", Closed=Closed)
 
 @app.route('/portal-encuestador-estadisticas')
 def portal_encuestador_estadisticas():

@@ -81,11 +81,19 @@ td {
 }
 
 .td-finalizadas {
-    width: 166px;
+    width: 222px;
+}
+
+.td-resultados {
+    width: 65px;
 }
 
 .a-botones {
     margin-right: 5px;
+}
+
+.margen-izq {
+    padding-left: 15px;
 }
 
 .none {

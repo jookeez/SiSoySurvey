@@ -11,14 +11,34 @@ Portal del Encuestador
   <form action="/guardar_encuesta/{{question_number}}" method="POST">
     <div class="mini-contenedor">
       <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold mb-3">Resultados: Encuesta {{id_encuesta}}</h1>
-        <div class="mb-3">
-          <h4 class="form-label">Título</h4>
-          <p>{{polls[0].1}}</p>
-        </div>
-        <div class="mb-3">
-          <h4 class="form-label">Descripción</h4>
-          <p>{{polls[0].2}}</p>
+        <h1 class="display-5 fw-bold mb-3">Resultados</h1>
+        <div class="mini-contenedor p-3 mb-3 mt-3">
+          <div class="mb-3">
+            <h3 class="form-label">{{polls[0].1}}</h3>
+            <p>{{polls[0].2}}</p>
+          </div>
+          <table>
+            <tr>
+              <th>ID</th>
+              <td class="margen-izq">{{id_encuesta}}</td>
+            </tr>
+            <tr>
+              <th>Fecha Apertura</th>
+              <td class="margen-izq">?</td>
+            </tr>
+            <tr>
+              <th>Fecha Cierre</th>
+              <td class="margen-izq">?</td>
+            </tr>
+            <tr>
+              <th>Personas encuestadas</th>
+              <td class="margen-izq">?</td>
+            </tr>
+            <tr>
+              <th>Cantidad de preguntas</th>
+              <td class="margen-izq">{{polls[0].4}}</td>
+            </tr>
+          </table>
         </div> 
         {% set i = namespace(a=-1) %}
         {% for question in questions%}
