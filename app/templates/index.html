@@ -1,4 +1,4 @@
-{% extends "layout/principal.html" %}
+{% extends "./layout.html" %}
 
 {% block title %}
 Inicio
@@ -25,7 +25,7 @@ Inicio
           <div class="carousel-caption text-start">
             <h1>¿Ya quieres opinar sobre la encuesta docente de tu universidad?</h1>
               <p>Mientras tanto, puedes opinar sobre el último partido de fútbol. Participa en nuestras encuestas.</p>
-            <p><a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a></p>
+            <p><a class="btn btn-lg btn-primary" href="{{ url_for('registrarse')}}">Participa</a></p>
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@ Inicio
           <div class="carousel-caption">
             <h1>Encuestas que apuntan a todos los segmentos</h1>
             <p>Encuentra temas de tu interés o experiencias de usuario en tiendas físicas.</p>
-            <p><a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a></p>
+            <p><a class="btn btn-lg btn-primary" href="{{ url_for('registrarse')}}">Participa</a></p>
           </div>
         </div>
       </div>
@@ -47,7 +47,7 @@ Inicio
           <div class="carousel-caption text-end">
             <h1>¿Te gustaria participar?</h1>
             <p>Son muchas las personas que ya están participando en nuestras encuestas. ¡Únete! y opina de tus temas preferidos.</p>
-            <p><a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a></p>
+            <p><a class="btn btn-lg btn-primary" href="{{ url_for('registrarse')}}">Participa</a></p>
           </div>
         </div>
       </div>
@@ -74,15 +74,9 @@ Inicio
       <div>
         <h2>{{ d.1 }}</h2>
         <p>{{ d.2 }}</p>
-        {% if 'portal' in session %}
-        <a href="/encuestas/{{ d.0 }}/{{ session['correo'] }}" class="btn btn-warning">
+        <a href="/encuestas/{{ d.0 }}" class="btn btn-primary">
           Ir a encuesta
         </a>
-        {% else %}
-        <a href="/encuestas/{{ d.0 }}" class="btn btn-warning">
-          Ver encuesta
-        </a>
-        {% endif %}
       </div>
     </div>
     {% endfor %}
@@ -92,17 +86,6 @@ Inicio
 <!-- HEROES -->
 <section>
 <div class="bg-dark text-secondary px-4 py-5 text-center">
-  {% if 'portal' in session %}
-  <div class="py-5">
-    <h1 class="display-5 fw-bold text-white">¡Es un gusto que seas participante!</h1>
-    <div class="col-lg-6 mx-auto">
-      <p class="fs-5 mb-4">Gracias a ti y a cientos de personas que se han suscrito, hemos podido conocer y mejorar la calidad de las preguntas en las encuestas.<br>¡Tu opinión cada vez es más valiosa!</p>
-      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <a href="{{ url_for('ultimas_encuestas')}}"><button type="button" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Revisa las últimas encuestas</button></a>
-      </div>
-    </div>
-  </div>
-  {% else %}
   <div class="py-5">
     <h1 class="display-5 fw-bold text-white">¿Te convenciste de participar?</h1>
     <div class="col-lg-6 mx-auto">
@@ -113,7 +96,6 @@ Inicio
       </div>
     </div>
   </div>
-  {% endif %}
 </div>
 </section>
 {% endblock %}

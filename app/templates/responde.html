@@ -1,0 +1,49 @@
+{% extends "./layout-responde.html" %}
+
+{% block title %}
+Encuestas
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/encuestas.css')}}">
+{% endblock %}
+
+{% block body %}
+<section>
+    <main class="container p-3">
+        <div class="bg-light p-5 rounded">
+            <h1>{{ informacion.nombre }}</h1>
+            <p class="lead">{{ informacion.descripcion }}</p>
+            {% set i = namespace(a=-1)  %}
+
+            {% for question in questions %}
+                <div class="card mb-3">
+                    <div class="card-header">
+                        {{ loop.index }}. {{ question.1 }}
+                    </div>
+                    <div class="card-body">
+                        {% set i.a= i.a + 1  %}
+                        <div class="form-check">
+                            <div>
+                                <input class="form-check-input" type="radio" name="{{question.1}}" id="flexRadioDefault{{i.a}}">
+                                <label class="form-check-label" for="flexRadioDefault{{i.a}}">{{options[i.a].1}}</label>
+                            </div>
+                            {% set i.a= i.a + 1  %}
+                            <div>
+                                <input class="form-check-input" type="radio" name="{{question.1}}" id="flexRadioDefault{{i.a}}">
+                                <label class="form-check-label" for="flexRadioDefault{{i.a}}">{{options[i.a].1}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="mt-4">
+                <a href="#" class="btn btn-primary">Finalizar</a>
+            </div>
+            <!--<div class="progress mt-4">
+                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="{{ informacion.preguntas }}"></div>
+            </div>-->
+        </div>
+      </main>
+  </section>
+{% endblock %}
