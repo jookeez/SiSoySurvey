@@ -752,10 +752,6 @@ def portal_encuestador_encuestas_crear():
 def portal_encuestador_encuestas_visualizar():
     return render_template("portal-encuestador-encuestas-visualizar.html")
 
-#@app.route('/portal-encuestador-encuestas-editar')
-#def portal_encuestador_encuestas_editar():
-#    return render_template("portal-encuestador-encuestas-editar.html")
-
 @app.route('/portal-encuestador-resultados')
 def portal_encuestador_resultados():
     return render_template("portal-encuestador-resultados.html")

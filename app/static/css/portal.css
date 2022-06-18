@@ -267,12 +267,15 @@ td {
     }
 }
 
+@media (max-width: 500px) {
+    .input-group-text {
+        width: 100%;
+    }
+}
+
 @media (max-width: 400px) {
     .btn-responsive {
         margin: 3px;
-        width: 100%;
-    }
-    .input-group-text {
         width: 100%;
     }
 }
