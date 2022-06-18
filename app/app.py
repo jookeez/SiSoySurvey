@@ -101,7 +101,12 @@ def editar_encuesta(id_encuesta):
 
 
 #-------------------------------
-
+@app.route('/resultados-alternativa')
+def resultados_alternativa(id_alternativa):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT COUNT(id_alternativa) FROM Respuestas as r WHERE r.id_alternativa =%s",[id_alternativa])
+    a = cur.fetchone()
+    return a[0]
 
 #El usuario puede visualizar la información de la encuesta
 @app.route("/portal-encuestador-encuestas-visualizar/<id_encuesta>") 
@@ -116,11 +121,22 @@ def visualizar_encuesta(id_encuesta):
     cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
     options=cur.fetchall()
 
+    values = []
+
+    print("OPTIONS")
+    for f in options:
+        print(f[0])
+        values.append(resultados_alternativa(f[0]))
+
+    print(values)
+    
+
+
     return render_template("portal-encuestador-encuestas-visualizar.html"
     ,polls=polls
     ,questions=questions
     ,options=options
-    ,id_encuesta=id_encuesta)
+    ,id_encuesta=id_encuesta,values=values)
 
 #-------------------------------
 
@@ -433,7 +449,7 @@ def responder_encuestas(id_encuesta,correo):
 
 
     #Deberia ir al momento que Participante envìa la Encuesta con sus respuestas
-    cur.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo,id_encuesta])
+    #cur.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo,id_encuesta])
     
     cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
     questions=cur.fetchall()
@@ -477,6 +493,7 @@ def elimina_alternativas(id_pregunta):
     mysql.connection.commit()
     return 1
 
+#ELIMINA DE LA TABLA 'RESPUESTAS'
 @app.route('/eliminar-respuestas')
 def elimina_respuestas(id_pregunta):
     cur = mysql.connection.cursor() 
