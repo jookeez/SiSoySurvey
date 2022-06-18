@@ -477,6 +477,13 @@ def elimina_alternativas(id_pregunta):
     mysql.connection.commit()
     return 1
 
+@app.route('/eliminar-respuestas')
+def elimina_respuestas(id_pregunta):
+    cur = mysql.connection.cursor() 
+    cur.execute('DELETE FROM Respuestas WHERE id_pregunta = %s',[id_pregunta])
+    mysql.connection.commit()
+    return 1
+
 #ELIMINAR PREGUNTAS DE BASE DE DATOS
 @app.route('/eliminar-preguntas/<int:id_encuesta>')
 def elimina_preguntas(id_encuesta):
@@ -486,12 +493,19 @@ def elimina_preguntas(id_encuesta):
     row = cur.fetchall()
 
     for i in row:
+        elimina_respuestas(i[0])
         elimina_alternativas(i[0])
 
     cur2 = mysql.connection.cursor() 
     cur2.execute('DELETE FROM Preguntas WHERE id_encuesta = %s', [id_encuesta])
     mysql.connection.commit()
 
+    return 1
+
+@app.route('/eliminar-de-tabla-responde/')
+def eliminar_de_tabla_responde(id_encuesta):
+    cur = mysql.connection.cursor()
+    cur.execute('DELETE FROM Responde WHERE id_encuesta = %s', [id_encuesta])
     return 1
 
 # EL ENCUESTADOR ELIMINA LA ENCUESTA DE LA BASE DE DATOS
@@ -501,6 +515,7 @@ def eliminar_encuesta(tipo, id_encuesta):
 
     curr = mysql.connection.cursor()
     curr.execute('SELECT p.id_pregunta FROM Preguntas as p WHERE p.id_encuesta  = %s',[id_encuesta])
+    eliminar_de_tabla_responde(id_encuesta)
     elimina_preguntas(id_encuesta)
     cur = mysql.connection.cursor()
     cur.execute('DELETE FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
@@ -508,7 +523,8 @@ def eliminar_encuesta(tipo, id_encuesta):
 
     if tipo == "abierta":      
         ret = redirect(url_for('portal_encuestador_encuestas_abiertas'))
-    elif tipo == "cerrada":      
+    elif tipo == "cerrada":
+        
         ret = redirect(url_for('portal_encuestador_encuestas_finalizadas'))
     elif tipo == "por_realizar": 
         ret = redirect(url_for('portal_encuestador_encuestas_realizar'))
