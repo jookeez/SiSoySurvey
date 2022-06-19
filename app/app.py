@@ -483,6 +483,7 @@ def responder_encuestas(id_encuesta, correo):
     }
     return render_template("responde.html",
         informacion=informacion,
+        datos=datos,
         correo=correo,
         questions=questions,
         options=options) 
@@ -491,15 +492,15 @@ def responder_encuestas(id_encuesta, correo):
 @app.route('/encuestas-finalizar/<int:id_encuesta>/<correo>')
 def encuestas_finalizar(id_encuesta, correo):
     cur = mysql.connection.cursor()
-    cur.execute('INSERT INTO Responde (correo, id_encuesta) VALUES (%s,%s)',[correo, id_encuesta])
+    #cur.execute('INSERT INTO Responde (correo, id_encuesta) VALUES (%s,%s)',[correo, id_encuesta])
     cur.execute('SELECT nombre FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
     data = cur.fetchone()
     mysql.connection.commit()
 
     informacion = {
         'titulo_favicon': "¡Encuesta finalizada!",
-        'titulo': "¡Gracias por responder!",
-        'descripcion': "La encuesta " + data[0] + " fue respondida exitosamente."
+        'titulo': "¡Gracias por tu opinión!",
+        'descripcion': "La encuesta ''" + data[0] + "'' fue respondida exitosamente."
     }
     return render_template("aviso.html", informacion=informacion)
 

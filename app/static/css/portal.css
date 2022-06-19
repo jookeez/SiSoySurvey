@@ -27,8 +27,12 @@ body {
 }
 
 .container {
-    max-width: 90%;
+    width: 90%;
     margin: auto;
+}
+
+.container-fit {
+    max-width: fit-content;
 }
 
 .max-700 { 
@@ -65,7 +69,9 @@ body {
 }
 .contenedor-resumen {
     width: 175px;
-    height: 175px;
+    max-width: max-content;
+    height: max-content;
+    min-height: 175px;
     padding: 10px !important;
     display: inline-flex;
     margin: 0 7px 12px 0 !important;
@@ -96,6 +102,10 @@ td {
 
 .td-resultados {
     width: 65px;
+}
+
+.td-eliminar {
+    width: 100px;
 }
 
 .a-botones {
@@ -174,6 +184,11 @@ td {
     color: #000 !important;
 }
 
+.palabra-clave {
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+}
+
 @media (min-width: 1200px) and (max-width: 1399px) {
 
 }
@@ -183,6 +198,9 @@ td {
     .ocultar-id, 
     .ocultar-estado {
         display: none;
+    }
+    .container-fit {
+        margin: 0 25px;
     }
 }
 
@@ -202,6 +220,9 @@ td {
     .a-botones {
         margin: 2px;
         width: 100%;
+    }
+    .container-fit {
+        margin: 0 25px;
     }
 }
 
@@ -233,6 +254,9 @@ td {
         margin: 2px;
         width: 100%;
     }
+    .container-fit {
+        margin: 0 25px;
+    }
 }
 
 @media (max-width: 575px) {
@@ -245,6 +269,13 @@ td {
     }
     .principal {
         display: block;
+    }
+    .py-5 {
+        padding-top: 2rem!important;
+        padding-bottom: 2rem!important;
+    }
+    .contenedor-resumen {
+        padding: 5px !important;
     }
     .menu-lateral {
         width: 100%;
@@ -265,8 +296,7 @@ td {
     .ocultar-estado, 
     .ocultar-fecha,
     .ocultar-preguntas,
-    .ocultar-nombre,
-    .ocultar-boton {
+    .ocultar-nombre {
         display: none;
     }
     .td-realizar,
@@ -283,6 +313,19 @@ td {
 @media (max-width: 500px) {
     .input-group-text {
         width: 100%;
+    }
+    .mini-contenedor{
+        padding: 0 0.5rem;
+    }
+    .py-5 {
+        padding-top: 1rem!important;
+        padding-bottom: 1rem!important;
+    }
+    .contenedor-resumen {
+        padding: 5px !important;
+    }
+    .ocultar-boton {
+        display: none;
     }
 }
 

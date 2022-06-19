@@ -25,21 +25,23 @@ Encuestas
                         {% set i.a= i.a + 1  %}
                         <div class="form-check">
                             <div>
-                                <input class="form-check-input" type="radio" name="{{question.1}}" id="flexRadioDefault{{i.a}}">
+                                <input required class="form-check-input" type="radio" name="{{question.1}}" id="flexRadioDefault{{i.a}}">
                                 <label class="form-check-label" for="flexRadioDefault{{i.a}}">{{options[i.a].1}}</label>
                             </div>
                             {% set i.a= i.a + 1  %}
                             <div>
-                                <input class="form-check-input" type="radio" name="{{question.1}}" id="flexRadioDefault{{i.a}}">
+                                <input required class="form-check-input" type="radio" name="{{question.1}}" id="flexRadioDefault{{i.a}}">
                                 <label class="form-check-label" for="flexRadioDefault{{i.a}}">{{options[i.a].1}}</label>
                             </div>
                         </div>
                     </div>
                 </div>
             {% endfor %}
+            <!--
             <div class="progress mt-4">
                 <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="{{ informacion.preguntas }}"></div>
             </div>
+            -->
             <div class="mt-4">
                 <a href="/encuestas-finalizar/{{ datos.id_encuesta }}/{{ datos.correo }}" class="btn btn-warning">Finalizar</a>
             </div>
