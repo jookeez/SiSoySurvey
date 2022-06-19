@@ -12,6 +12,13 @@ app.config['MYSQL_PASSWORD'] = 'is2_gonzal0'
 app.config['MYSQL_DB'] = 'jookeezc_encuesta'
 mysql = MySQL(app)
 
+'''
+{% if 'participante' in session %}
+{% elif 'encuestador' in session %}
+{% else %}
+{% endif %}
+'''
+
 # ------------------ CORREO ELECTRONICO ------------------ #
 
 # CONEXION SMTP PARA ENVIO DE CORREOS
@@ -379,6 +386,7 @@ def editar_encuesta(id_encuesta):
 def portal_participante():
     cur = mysql.connection.cursor()
 
+    #CANTIDAD DE ENCUESTAS QUE HA RESPONDIDO
     cur.execute('SELECT COUNT(*) FROM Responde WHERE correo = %s', [session['correo']])
     data_count_encuestas_resp = cur.fetchone()
 
@@ -438,9 +446,13 @@ def responder_encuestas_aviso(id_encuesta):
     informacion = {
         'titulo_favicon': 'Encuesta de ' + data[0],
         'titulo' : data[0],
-        'descripcion' : data[1]
+        'descripcion' : ' Para contestar esta encuesta, debes acceder como participante.',
+        'texto_boton_izq' : 'Iniciar Sesión como Participante',
+        'enlace_boton_izq' : '/iniciar-sesion',
+        'texto_boton_der' : 'Regístrate como Participante',
+        'enlace_boton_der' : '/registrarse'
     }
-    return render_template("aviso.html", informacion=informacion)
+    return render_template("aviso-botones.html", informacion=informacion)
 
 # NUEVO FORMULARIO DE ENCUESTAS
 @app.route('/encuestas/<int:id_encuesta>/<correo>')
@@ -649,6 +661,7 @@ def logear_participante():
                 session['nombre'] = user[1] #Se le pasa el nombre al HTML del portal
                 session['primer-nombre'] = primera_palabra(user[1])
                 session['correo'] = user[0] #Se le pasa el correo al HTML del portal
+                session['participante'] = True
                 return redirect(url_for('portal_participante'))
             else: 
                 informacion = {
@@ -688,6 +701,7 @@ def logear_encuestador():
                 session['nombre'] = user[1] #Se le pasa el nombre al HTML del portal
                 session['primer-nombre'] = primera_palabra(user[1])
                 session['correo'] = user[3] #Se le pasa el correo al HTML del portal
+                session['encuestador'] = True
                 return redirect(url_for('portal_encuestador'))
             else:
                 informacion = {
@@ -714,6 +728,8 @@ def logear_encuestador():
 # AL CERRAR SESION LOS DATOS DE LA SESION DE USUARIO SE ELIMINAN DE CACHE
 @app.route('/cerrar-sesion/')
 def cerrar_sesion():
+    session['participante'] = False
+    session['encuestador'] = False
     session.clear()
     return redirect(url_for("index"))
 

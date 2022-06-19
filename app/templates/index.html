@@ -25,7 +25,15 @@ Inicio
           <div class="carousel-caption text-start">
             <h1>¿Ya quieres opinar sobre la encuesta docente de tu universidad?</h1>
               <p>Mientras tanto, puedes opinar sobre el último partido de fútbol. Participa en nuestras encuestas.</p>
-            <p><a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a></p>
+              <p>
+                {% if 'participante' in session %}
+                  <a class="btn btn-lg btn-warning" href="{{ url_for('portal_participante')}}">Ya estás registrado</a>
+                {% elif 'encuestador' in session %}
+                  
+                {% else %}
+                  <a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a>
+                {% endif %}
+              </p>
           </div>
         </div>
       </div>
@@ -36,7 +44,15 @@ Inicio
           <div class="carousel-caption">
             <h1>Encuestas que apuntan a todos los segmentos</h1>
             <p>Encuentra temas de tu interés o experiencias de usuario en tiendas físicas.</p>
-            <p><a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a></p>
+            <p>
+              {% if 'participante' in session %}
+                <a class="btn btn-lg btn-warning" href="{{ url_for('portal_participante')}}">Ya estás registrado</a>
+              {% elif 'encuestador' in session %}
+                
+              {% else %}
+                <a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a>
+              {% endif %}
+            </p>
           </div>
         </div>
       </div>
@@ -47,7 +63,15 @@ Inicio
           <div class="carousel-caption text-end">
             <h1>¿Te gustaria participar?</h1>
             <p>Son muchas las personas que ya están participando en nuestras encuestas. ¡Únete! y opina de tus temas preferidos.</p>
-            <p><a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a></p>
+            <p>
+              {% if 'participante' in session %}
+                <a class="btn btn-lg btn-warning" href="{{ url_for('portal_participante')}}">Ya estás registrado</a>
+              {% elif 'encuestador' in session %}
+
+              {% else %}
+                <a class="btn btn-lg btn-warning" href="{{ url_for('registrarse')}}">Participa</a>
+              {% endif %}
+            </p>
           </div>
         </div>
       </div>
@@ -74,9 +98,13 @@ Inicio
       <div>
         <h2>{{ d.1 }}</h2>
         <p>{{ d.2 }}</p>
-        <a href="/encuestas/{{ d.0 }}" class="btn btn-warning">
-          Ir a encuesta
-        </a>
+        {% if 'participante' in session %}
+          <a href="/encuestas/{{ d.0 }}/{{ session['correo'] }}" class="btn btn-warning">Responder</a>
+        {% elif 'encuestador' in session %}
+        <a href="/portal-encuestador-encuestas-visualizar/{{ d.0 }}" class="btn btn-warning a-botones">Resumen</a>
+        {% else %}
+          <a href="/encuestas/{{ d.0 }}" class="btn btn-warning">Ir a encuesta</a>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
@@ -91,8 +119,14 @@ Inicio
     <div class="col-lg-6 mx-auto">
       <p class="fs-5 mb-4">Si te gusta expresar tu opinión acerca de tus temas de interés, date una oportunidad de responder nuestras breves encuestas.<br>¡Tu opinión nos importa!</p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <a href="{{ url_for('registrarse')}}"><button type="button" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Participa</button></a>
-        <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="btn btn-outline-light btn-lg px-4">Ya estoy registrado</button></a>
+        {% if 'participante' in session %}
+          <a href="{{ url_for('portal_participante')}}"><button type="button" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Ya estás registrado</button></a>
+        {% elif 'encuestador' in session %}
+          
+        {% else %}
+          <a href="{{ url_for('registrarse')}}"><button type="button" class="btn btn-outline-warning btn-lg px-4 me-sm-3 fw-bold">Participa</button></a>
+          <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="btn btn-outline-light btn-lg px-4">Ya estoy registrado</button></a>
+        {% endif %}
       </div>
     </div>
   </div>

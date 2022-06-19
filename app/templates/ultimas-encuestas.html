@@ -33,7 +33,13 @@
               <td class="min-width ocultar-fecha">{{ d.4 }}</td>
               <td class="ocultar-preguntas">{{ d.5 }}</td>
               <td class="td-realizar">
+                {% if 'participante' in session %}
+                  <a href="/encuestas/{{ d.0 }}/{{ session['correo'] }}" class="btn btn-warning a-botones">Responder</a>
+                {% elif 'encuestador' in session %}
+                  <a href="/portal-encuestador-encuestas-visualizar/{{ d.0 }}" class="btn btn-warning a-botones">Resumen</a>
+                {% else %}
                   <a href="/encuestas/{{ d.0 }}" class="btn btn-warning a-botones">Responder</a>
+                {% endif %}
               </td>
             </tr>
             {% endfor %}
