@@ -2,6 +2,10 @@
     max-width: 70%;
 }
 
+.container-footer {
+    max-width: 90%;
+}
+
 .progress-bar {
     width: 100%;
     background-color: #ffc107;
@@ -20,14 +24,8 @@
 
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
-
-}
-
-@media (min-width: 576px) and (max-width: 767px) {
-
-}
-
-@media (max-width: 575px) {
-
+@media (max-width: 991px) {
+    .container {
+        max-width: 100%;
+    }
 }

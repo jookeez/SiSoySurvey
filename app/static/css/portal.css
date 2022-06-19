@@ -63,6 +63,16 @@ body {
     border-radius: 1rem !important;
     background-color: #ffffff60;
 }
+.contenedor-resumen {
+    width: 175px;
+    height: 175px;
+    padding: 10px !important;
+    display: inline-flex;
+    margin: 0 7px 12px 0 !important;
+}
+.contenedor-interno {
+    padding: 1rem!important;
+}
 
 td {
     border-color: #bebebe;
@@ -246,11 +256,6 @@ td {
     }
     .principal {
         display: block;
-    }
-    .menu-lateral {
-        width: 100%;
-        height: min-content;
-        position: relative;
     }
     .contenedor-derecho {
         margin-left: 0;

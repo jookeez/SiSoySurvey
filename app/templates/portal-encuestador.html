@@ -14,11 +14,77 @@ active
 <div class="container">
     <div class="mini-contenedor">
         <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold mb-3">Hola {{ session['nombre'] }}</h1>
-            <p for="basic-url" class="form-label mb-4">Aquí puedes ver un resumen de tus actividades.</p>
+            <h1 class="display-5 fw-bold mb-3">Hola {{ session['primer-nombre'] }}</h1>
+            <p for="basic-url" class="form-label mb-4">Aquí puedes ver una actualización de los datos.</p>
+            <div>
+                <div class="mini-contenedor contenedor-resumen">
+                    <div class="container-fluid contenedor-interno">
+                        <p class="form-label mb-2">Hay un universo de <b>{{ informacion.cont_participantes }}</b> participantes.</p>
+                        <a href="/portal-encuestador-participantes-agregar">
+                            <button class="btn btn-responsive btn-warning btn-md mt-2" type="button">Agregar</button>
+                        </a>
+                    </div>
+                </div>
+                <div class="mini-contenedor contenedor-resumen">
+                    <div class="container-fluid contenedor-interno">
+                        <p class="form-label mb-2">
+                            La encuesta <b>{{ informacion.enc_abierta_asc_1_nombre }}</b> ha sido contestada por 
+                            <b>{{ informacion.cont_enc_abierta_asc_1 }}</b> participantes.
+                        </p>
+                    </div>
+                </div>
+                <div class="mini-contenedor contenedor-resumen">
+                    <div class="container-fluid contenedor-interno">
+                        <p class="form-label mb-2">La encuesta <b>{{ informacion.enc_abierta_desc_1_nombre }}</b> 
+                            {% if informacion.enc_abierta_desc_1_dias > 1 %}
+                                finaliza en <br><b>{{ informacion.enc_abierta_desc_1_dias }}</b> dias.
+                            {% elif informacion.enc_abierta_desc_1_dias == 1 %}
+                                finaliza <b>mañana</b>.
+                            {% elif informacion.enc_abierta_desc_1_dias == 0 %}
+                                finaliza <b>hoy</b>.
+                            {% elif informacion.enc_abierta_desc_1_dias_neg == 1 %}
+                                finalizó <b>ayer</b>.
+                            {% else %}
+                                finalizó hace <br><b>{{ informacion.enc_abierta_desc_1_dias_neg }}</b> dias.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="mini-contenedor contenedor-resumen">
+                    <div class="container-fluid contenedor-interno">
+                        <p class="form-label mb-2">Hay <b>{{ informacion.cont_encuestas_fin }}</b> encuestas finalizadas.</p>
+                        <a href="/portal-encuestador-encuestas-finalizadas">
+                            <button class="btn btn-responsive btn-warning btn-md mt-2" type="button">Ver</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="mini-contenedor">
         <div class="container-fluid py-5">
-            <h2 class="display-5 fw-bold mb-3">Sin actividades.</h2>
+            <h4 class="display-5 fw-bold mb-3">Última Encuesta Finalizada</h4>
+            <div>
+                <div class="mini-contenedor contenedor-resumen">
+                    <div class="container-fluid contenedor-interno">
+                        <p class="form-label mb-2">La encuesta se llama <b>{{ informacion.ue_nombre }}</b>.</p>
+                    </div>
+                </div>
+                <div class="mini-contenedor contenedor-resumen">
+                    <div class="container-fluid contenedor-interno">
+                        <p class="form-label mb-2">Fue contestada por <b>{{ informacion.ue_participantes }}</b> participantes.</p>
+                    </div>
+                </div>
+                <div class="mini-contenedor contenedor-resumen">
+                    <div class="container-fluid contenedor-interno">
+                        <p class="form-label mb-2">Fue abierta el <br><b>{{ informacion.ue_fecha_inicio }}</b>.</p>
+                        <p class="form-label mb-2">Finalizó hace <br><b>{{ informacion.ue_fecha_finaliza }}</b> dias.</p>
+                    </div>
+                </div>
+            </div>
+            <a href="/portal-encuestador-visualizar-resultados/{{ informacion.ue_id }}">
+                <button class="btn btn-responsive btn-warning btn-lg mt-2" type="button">Resultados</button>
+            </a>
         </div>
     </div>
 </div>

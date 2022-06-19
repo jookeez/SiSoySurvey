@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -114,6 +115,56 @@ def enviar_mensaje(nombre, correo, id_encuesta, encuesta):
 
 
 # ------------------ ENCUESTADOR ------------------ #
+
+#PORTAL DEL ENCUESTADOR
+@app.route('/portal-encuestador')
+def portal_encuestador():
+    cur = mysql.connection.cursor()
+
+    #TOTAL DE PARTICIPANTES DEL LISTADO
+    cur.execute('SELECT COUNT(*) FROM Encuestados')
+    data_participantes = cur.fetchone()
+
+    #PRIMERA ENCUESTA ABIERTA
+    cur.execute('SELECT id_encuesta, nombre FROM Encuestas WHERE estado = "Abierta" ORDER BY id_encuesta ASC LIMIT 1')
+    data_enc_abierta_asc_1 = cur.fetchone()
+
+    #PARTICIPANTES QUE RESPONDIERON LA PRIMERA ENCUESTA ABIERTA
+    cur.execute('SELECT COUNT(*) FROM Responde WHERE id_encuesta = %s', [data_enc_abierta_asc_1[0]])
+    data_count_enc_abierta_asc_1 = cur.fetchone()
+
+    #ULTIMA ENCUESTA ABIERTA
+    cur.execute('SELECT id_encuesta, nombre, fecha_fin FROM Encuestas WHERE estado = "Abierta" ORDER BY id_encuesta DESC LIMIT 1')
+    data_enc_abierta_desc_1 = cur.fetchone()
+    
+    #CANTIDAD DE ENCUESTAS CERRADAS
+    cur.execute('SELECT COUNT(*) FROM Encuestas WHERE Estado = "Cerrada"')
+    data_encuestas = cur.fetchone()
+
+    #DATOS DE LA ULTIMA ENCUESTA FINALIZADA
+    cur.execute('SELECT id_encuesta, nombre, fecha_inicio, fecha_fin FROM Encuestas WHERE estado = "Cerrada" ORDER BY id_encuesta DESC LIMIT 1')
+    data_ue = cur.fetchone()
+
+    #PARTICIPANTES QUE RESPONDIERON LA ULTIMA ENCUESTA FINALIZADA
+    cur.execute('SELECT COUNT(*) FROM Responde WHERE id_encuesta = %s', [data_ue[0]])
+    data_count = cur.fetchone()
+
+    informacion = {
+        'cont_participantes': data_participantes[0],
+        'enc_abierta_asc_1_nombre': data_enc_abierta_asc_1[1],
+        'cont_enc_abierta_asc_1': data_count_enc_abierta_asc_1[0],
+        'enc_abierta_desc_1_nombre': data_enc_abierta_desc_1[1],
+        'enc_abierta_desc_1_dias': diferenciaDias(data_enc_abierta_desc_1[2]),
+        'enc_abierta_desc_1_dias_neg': diferenciaNegativaDias(data_enc_abierta_desc_1[2]),
+        'cont_encuestas_fin': data_encuestas[0],
+        'ue_id': data_ue[0],
+        'ue_nombre': data_ue[1],
+        'ue_fecha_inicio': data_ue[2],
+        'ue_fecha_fin': data_ue[3],
+        'ue_fecha_finaliza': diferenciaNegativaDias(data_ue[3]),
+        'ue_participantes': data_count[0]
+    }
+    return render_template("portal-encuestador.html", informacion=informacion)
 
 # AGREGAMOS UN NUEVO ENCUESTADOR A LA BASE DE DATOS
 @app.route('/agregar-encuestador/', methods=['POST'])
@@ -292,7 +343,8 @@ def visualizar_resultados(id_encuesta):
     ,polls=polls
     ,questions=questions
     ,options=options
-    ,id_encuesta=id_encuesta,values=values)
+    ,id_encuesta=id_encuesta,
+    values=values)
 
 #El usuario accede al portal de creacion de encuestas
 @app.route("/portal-encuestador-encuestas-crear/<int:question_number>")
@@ -322,6 +374,19 @@ def editar_encuesta(id_encuesta):
 
 
 # ------------------ PARTICIPANTE ------------------ #
+
+@app.route('/portal-participante')
+def portal_participante():
+    cur = mysql.connection.cursor()
+
+    cur.execute('SELECT COUNT(*) FROM Responde WHERE correo = %s', [session['correo']])
+    data_count_encuestas_resp = cur.fetchone()
+
+    informacion = {
+        'encuestas_respondidas': data_count_encuestas_resp[0]
+    }
+
+    return render_template("portal-participante.html", informacion=informacion)
 
 # VEMOS EN EL PORTAL PRIVADO DEL PARTICIPANTE EL LISTADO DE ENCUESTAS QUE PUEDE RESPONDER
 @app.route("/portal-participante-encuestas-responder/<mail>")
@@ -379,11 +444,10 @@ def responder_encuestas_aviso(id_encuesta):
 
 # NUEVO FORMULARIO DE ENCUESTAS
 @app.route('/encuestas/<int:id_encuesta>/<correo>')
-def responder_encuestas(id_encuesta,correo):
+def responder_encuestas(id_encuesta, correo):
     cur = mysql.connection.cursor()
     cur.execute('SELECT nombre, descripcion, preguntas FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
     data = cur.fetchone()
-
 
     #Deberia ir al momento que Participante envìa la Encuesta con sus respuestas
     #cur.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo,id_encuesta])
@@ -401,10 +465,31 @@ def responder_encuestas(id_encuesta,correo):
         'descripcion' : data[1],
         'preguntas' : data[2]
     }
-    return render_template("responde.html"
-    ,informacion=informacion
-    ,questions=questions
-    ,options=options) 
+    datos = {
+        'id_encuesta': id_encuesta,
+        'correo': correo
+    }
+    return render_template("responde.html",
+        informacion=informacion,
+        correo=correo,
+        questions=questions,
+        options=options) 
+
+# EL USUARIO HA FINALIZADO UNA ENCUESTA
+@app.route('/encuestas-finalizar/<int:id_encuesta>/<correo>')
+def encuestas_finalizar(id_encuesta, correo):
+    cur = mysql.connection.cursor()
+    cur.execute('INSERT INTO Responde (correo, id_encuesta) VALUES (%s,%s)',[correo, id_encuesta])
+    cur.execute('SELECT nombre FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
+    data = cur.fetchone()
+    mysql.connection.commit()
+
+    informacion = {
+        'titulo_favicon': "¡Encuesta finalizada!",
+        'titulo': "¡Gracias por responder!",
+        'descripcion': "La encuesta " + data[0] + " fue respondida exitosamente."
+    }
+    return render_template("aviso.html", informacion=informacion)
 
 #PODEMOS VER LAS ULTIMAS ENCUESTAS QUE ESTAN ABIERTAS
 @app.route('/ultimas-encuestas')
@@ -547,8 +632,6 @@ def resultados_alternativa(id_alternativa):
     return a[0]
 
 
-
-
 # ------------------ USO DE SESIONES ------------------ #
 
 # VERIFICA EL INICIO DE SESION DEL ENCUESTADOR
@@ -564,6 +647,7 @@ def logear_participante():
         if user is not None:
             if email == user[0]:
                 session['nombre'] = user[1] #Se le pasa el nombre al HTML del portal
+                session['primer-nombre'] = primera_palabra(user[1])
                 session['correo'] = user[0] #Se le pasa el correo al HTML del portal
                 return redirect(url_for('portal_participante'))
             else: 
@@ -602,6 +686,7 @@ def logear_encuestador():
         if user is not None:
             if password == user[2]:
                 session['nombre'] = user[1] #Se le pasa el nombre al HTML del portal
+                session['primer-nombre'] = primera_palabra(user[1])
                 session['correo'] = user[3] #Se le pasa el correo al HTML del portal
                 return redirect(url_for('portal_encuestador'))
             else:
@@ -704,10 +789,6 @@ def terminos():
 def responde():
     return render_template("responde.html")
 
-@app.route('/portal-participante')
-def portal_participante():
-    return render_template("portal-participante.html")
-
 @app.route('/portal-participante-encuestas-responder')
 def portal_participante_encuestas_responder():
     return render_template("portal-participante-encuestas-responder.html")
@@ -723,10 +804,6 @@ def portal_participante_perfil():
 @app.route('/portal-participante-ajustes')
 def portal_participante_ajustes():
     return render_template("portal-participante-ajustes.html")
-
-@app.route('/portal-encuestador')
-def portal_encuestador():
-    return render_template("portal-encuestador.html")
 
 @app.route('/portal-encuestador-participantes-agregar')
 def portal_encuestador_participantes_agregar():
@@ -823,9 +900,25 @@ def procesar_texto(palabra):
     for caracter in caracteres_especiales:
         palabra_sin_caracteres_especiales = palabra.replace(caracter, '')
     palabra_con_espacios = palabra_sin_caracteres_especiales.replace('%20', ' ')
-    print(palabra_con_espacios)
+    #print(palabra_con_espacios)
     return palabra_con_espacios
 
+# ELIMINA TODOS LOS CARACTERES QUE UNA PALABRA O STRING NO NECESITE TENER
+def primera_palabra(palabra):
+    return palabra.split()[0]
+
+def diferenciaDias(fecha):
+    fecha_actual = datetime.now()
+    fecha_termino = datetime.strptime(str(fecha), "%Y-%m-%d")
+    diferencia = fecha_termino - fecha_actual
+    return diferencia.days
+
+def diferenciaNegativaDias(fecha):
+    fecha_actual = datetime.now()
+    fecha_termino = datetime.strptime(str(fecha), "%Y-%m-%d")
+    diferencia = fecha_actual - fecha_termino
+    return diferencia.days
+    
 
 
 
