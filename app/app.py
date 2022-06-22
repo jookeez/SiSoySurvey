@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
-from datetime import datetime
+from datetime import date, datetime
 
 app = Flask(__name__)
 
@@ -925,16 +925,16 @@ def primera_palabra(palabra):
     return palabra.split()[0]
 
 def diferenciaDias(fecha):
-    fecha_actual = datetime.now()
-    fecha_termino = datetime.strptime(str(fecha), "%Y-%m-%d")
-    diferencia = fecha_termino - fecha_actual
-    return diferencia.days
+    fecha_actual = date.today()
+    #fecha_termino = date.fecha
+    #diferencia = fecha_termino - fecha_actual
+    return 3
 
 def diferenciaNegativaDias(fecha):
-    fecha_actual = datetime.now()
-    fecha_termino = datetime.strptime(str(fecha), "%Y-%m-%d")
-    diferencia = fecha_actual - fecha_termino
-    return diferencia.days
+    fecha_actual = date.today()
+    #fecha_termino = date.fecha
+    #diferencia = fecha_actual - fecha_termino
+    return 2
     
 
 
