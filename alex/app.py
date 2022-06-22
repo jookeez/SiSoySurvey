@@ -148,6 +148,72 @@ def nueva_pregunta(num):
 #-------------------------------
 #-------------------------------
 
+# NUEVO FORMULARIO DE ENCUESTAS
+@app.route('/responder_encuesta/<int:id_encuesta>/<correo>')
+def responder_encuestas(id_encuesta,correo):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT nombre, descripcion, preguntas FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
+    data = cur.fetchone()
+
+    #cur.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo, id_encuesta])
+    
+    cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
+    questions=cur.fetchall()
+    
+    cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
+    options=cur.fetchall()    
+    
+
+    cur.close()
+    mysql.connection.commit()
+    informacion = {
+        'nombre' : data[0],
+        'descripcion' : data[1],
+        'preguntas' : data[2],
+        'correo' : correo
+    }
+    return render_template("responder_encuesta.html"
+    ,id_encuesta=id_encuesta
+    ,informacion=informacion
+    ,questions=questions
+    ,options=options) 
+
+
+@app.route('/enviar_respuesta/<int:id_encuesta>/<correo>/<int:preguntas>/<int:id_alternativa>/<int:id_pregunta>', methods=['GET', 'POST']) 
+def enviar_respuesta(id_encuesta,correo,preguntas,id_alternativa,id_pregunta):
+    if request.method == 'POST' or request.method == 'GET':
+        cur = mysql.connection.cursor()
+        answers = []
+        
+        #SELECT R.correo, R.id_encuesta FROM Responde as R WHERE R.correo= AND R.id_encuesta= ;
+        select=f"SELECT R.correo, R.id_encuesta FROM Responde as R WHERE R.correo='{correo}' AND R.id_encuesta={id_encuesta}"
+        cur.execute(select)
+        responde=cur.fetchall()
+        print(responde[0][0])
+        
+            
+            #query="INSERT INTO Responde(correo,id_encuesta) VALUES ('"+str(correo)+"',"+str(id_encuesta)+")"
+            #print(query)
+            #cur.execute(query)
+            
+        for c in range(1,preguntas+1):
+            aux= request.form['question'+str(c)]
+            answers.append( int(aux)+id_alternativa)
+        i=0
+        for answer in answers:
+            query="INSERT INTO Respuestas(id_pregunta,id_alternativa,correo) VALUES ("+str(id_pregunta+i) +","+str(answer)+ ",'"+str(correo)+"')"
+            print(query)
+            cur.execute(query)
+            i+=1
+        cur.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo, id_encuesta])
+        cur.close()
+        mysql.connection.commit()
+            
+        
+        return redirect(url_for('encuestas'))
+
+
+
 @app.route("/encuestas")
 def encuestas():#----> pagina
 
