@@ -329,6 +329,15 @@ def visualizar_encuesta(id_encuesta):
     ,id_encuesta=id_encuesta)
 
 
+#Cambia valor de estado de la encuesta (abierta -> cerrada)
+@app.route("/finalizar-encuesta/<id_encuesta>") 
+def finalizar_encuesta(id_encuesta):
+    cur = mysql.connection.cursor()    
+    cur.execute("UPDATE Encuestas SET estado='Cerrada',fecha_fin=(SELECT DATE( NOW() )) WHERE id_encuesta = %s",[id_encuesta])
+    mysql.connection.commit()
+    return redirect(url_for('portal_encuestador_encuestas_abiertas')) 
+
+#Recoleccion de datos desde BD para las encuestas finalizadas
 @app.route("/portal-encuestador-visualizar-resultados/<id_encuesta>") 
 def visualizar_resultados(id_encuesta):
     cur = mysql.connection.cursor()
@@ -343,9 +352,6 @@ def visualizar_resultados(id_encuesta):
 
     cur.execute("SELECT COUNT(r.correo) FROM Responde as r WHERE r.id_encuesta =%s",[id_encuesta])
     n_encuestados = cur.fetchone()
-
-    
-  
 
     values = []
 
