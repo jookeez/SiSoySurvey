@@ -332,7 +332,7 @@ def visualizar_encuesta(id_encuesta):
 @app.route("/portal-encuestador-visualizar-resultados/<id_encuesta>") 
 def visualizar_resultados(id_encuesta):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
+    cur.execute("SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas,E.fecha_inicio, E.fecha_fin FROM Encuestas as E WHERE E.id_encuesta=%s",[id_encuesta])
     polls = cur.fetchall()
 
     cur.execute("SELECT P.id_pregunta, P.enunciado FROM Preguntas as P WHERE P.id_encuesta=%s",[id_encuesta])
