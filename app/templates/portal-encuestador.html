@@ -36,17 +36,7 @@ active
                 <div class="mini-contenedor contenedor-resumen">
                     <div class="container-fluid contenedor-interno">
                         <p class="form-label mb-2">La encuesta <b>{{ informacion.enc_abierta_desc_1_nombre }}</b> 
-                            {% if informacion.enc_abierta_desc_1_dias > 1 %}
-                                finaliza en <br><b>{{ informacion.enc_abierta_desc_1_dias }}</b> dias.
-                            {% elif informacion.enc_abierta_desc_1_dias == 1 %}
-                                finaliza <b>mañana</b>.
-                            {% elif informacion.enc_abierta_desc_1_dias == 0 %}
-                                finaliza <b>hoy</b>.
-                            {% elif informacion.enc_abierta_desc_1_dias_neg == 1 %}
-                                finalizó <b>ayer</b>.
-                            {% else %}
-                                finalizó hace <br><b>{{ informacion.enc_abierta_desc_1_dias_neg }}</b> dias.
-                            {% endif %}
+                            comenzó el<br><b>{{ informacion.enc_abierta_desc_1_inicio }}</b>.
                         </p>
                     </div>
                 </div>
@@ -78,7 +68,6 @@ active
                 <div class="mini-contenedor contenedor-resumen">
                     <div class="container-fluid contenedor-interno">
                         <p class="form-label mb-2">Fue abierta el <br><b>{{ informacion.ue_fecha_inicio }}</b>.</p>
-                        <p class="form-label mb-2">Finalizó hace <br><b>{{ informacion.ue_fecha_finaliza }}</b> dias.</p>
                     </div>
                 </div>
             </div>

@@ -31,7 +31,7 @@ active
                         <th>Titulo</th>
                         <th class="ocultar-descripcion">Descripción</th>
                         <th class="ocultar-fecha">Fecha apertura</th>
-                        <th class="ocultar-fecha">Fecha cierre</th>
+                        <!--<th class="ocultar-fecha">Fecha cierre</th>-->
                         <th class="ocultar-preguntas ocultar">Preguntas</th>
                     </tr>
                 </thead>
@@ -42,12 +42,17 @@ active
                         <td>{{pollo.1}}</td>
                         <td class="ocultar-descripcion">{{pollo.2}}</td>
                         <td class="ocultar-fecha">{{pollo.4}}</td>
-                        <td class="ocultar-fecha">{{pollo.5}}</td>
+                        <!--<td class="ocultar-fecha">{{pollo.5}}</td>-->
                         <td class="ocultar-preguntas ocultar">{{pollo.6}}</td>
                         <td class="td-abiertas">
                             <a href="/portal-encuestador-encuestas-visualizar/{{pollo.0}}" class="btn btn-success a-botones">Ver</a>
+<<<<<<< Updated upstream
                             <a href="/finalizar-encuesta/{{pollo.0}}" class="btn btn-warning a-botones">Finalizar</a>
                             <!--<a class="btn btn-danger a-botones" href="/eliminar-encuesta/abierta/{{ pollo.0 }}">Eliminar</a>-->
+=======
+                            <!--<button href="#" class="btn btn-warning a-botones">Finalizar</button>-->
+                            <a class="btn btn-danger a-botones" href="/eliminar-encuesta/abierta/{{ pollc.0 }}">Eliminar</a>
+>>>>>>> Stashed changes
                         </td>
                     </tr>
                     {% endfor %}

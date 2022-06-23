@@ -141,7 +141,7 @@ def portal_encuestador():
     data_count_enc_abierta_asc_1 = cur.fetchone()
 
     #ULTIMA ENCUESTA ABIERTA
-    cur.execute('SELECT id_encuesta, nombre, fecha_fin FROM Encuestas WHERE estado = "Abierta" ORDER BY id_encuesta DESC LIMIT 1')
+    cur.execute('SELECT nombre, fecha_inicio FROM Encuestas WHERE estado = "Abierta" ORDER BY id_encuesta DESC LIMIT 1')
     data_enc_abierta_desc_1 = cur.fetchone()
     
     #CANTIDAD DE ENCUESTAS CERRADAS
@@ -149,7 +149,7 @@ def portal_encuestador():
     data_encuestas = cur.fetchone()
 
     #DATOS DE LA ULTIMA ENCUESTA FINALIZADA
-    cur.execute('SELECT id_encuesta, nombre, fecha_inicio, fecha_fin FROM Encuestas WHERE estado = "Cerrada" ORDER BY id_encuesta DESC LIMIT 1')
+    cur.execute('SELECT id_encuesta, nombre, fecha_inicio FROM Encuestas WHERE estado = "Cerrada" ORDER BY id_encuesta DESC LIMIT 1')
     data_ue = cur.fetchone()
 
     #PARTICIPANTES QUE RESPONDIERON LA ULTIMA ENCUESTA FINALIZADA
@@ -160,15 +160,12 @@ def portal_encuestador():
         'cont_participantes': data_participantes[0],
         'enc_abierta_asc_1_nombre': data_enc_abierta_asc_1[1],
         'cont_enc_abierta_asc_1': data_count_enc_abierta_asc_1[0],
-        'enc_abierta_desc_1_nombre': data_enc_abierta_desc_1[1],
-        'enc_abierta_desc_1_dias': diferenciaDias(data_enc_abierta_desc_1[2]),
-        'enc_abierta_desc_1_dias_neg': diferenciaNegativaDias(data_enc_abierta_desc_1[2]),
+        'enc_abierta_desc_1_nombre': data_enc_abierta_desc_1[0],
+        'enc_abierta_desc_1_inicio': data_enc_abierta_desc_1[1],
         'cont_encuestas_fin': data_encuestas[0],
         'ue_id': data_ue[0],
         'ue_nombre': data_ue[1],
         'ue_fecha_inicio': data_ue[2],
-        'ue_fecha_fin': data_ue[3],
-        'ue_fecha_finaliza': diferenciaNegativaDias(data_ue[3]),
         'ue_participantes': data_count[0]
     }
     return render_template("portal-encuestador.html", informacion=informacion)
@@ -613,10 +610,9 @@ def eliminar_encuesta(tipo, id_encuesta):
     cur.execute('DELETE FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
     mysql.connection.commit()
 
-    if tipo == "abierta":      
+    if tipo == "abierta":
         ret = redirect(url_for('portal_encuestador_encuestas_abiertas'))
     elif tipo == "cerrada":
-        
         ret = redirect(url_for('portal_encuestador_encuestas_finalizadas'))
     elif tipo == "por_realizar": 
         ret = redirect(url_for('portal_encuestador_encuestas_realizar'))
@@ -964,19 +960,7 @@ def procesar_texto(palabra):
 # ELIMINA TODOS LOS CARACTERES QUE UNA PALABRA O STRING NO NECESITE TENER
 def primera_palabra(palabra):
     return palabra.split()[0]
-
-def diferenciaDias(fecha):
-    fecha_actual = date.today()
-    #fecha_termino = date.fecha
-    #diferencia = fecha_termino - fecha_actual
-    return 3
-
-def diferenciaNegativaDias(fecha):
-    fecha_actual = date.today()
-    #fecha_termino = date.fecha
-    #diferencia = fecha_actual - fecha_termino
-    return 2
-    
+   
 
 
 
