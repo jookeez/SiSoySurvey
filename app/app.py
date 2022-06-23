@@ -341,6 +341,12 @@ def visualizar_resultados(id_encuesta):
     cur.execute("SELECT A.id_alternativa,A.descripcion  FROM Alternativas as A,Preguntas as P,Encuestas as E  WHERE E.id_encuesta=%s AND P.id_encuesta=E.id_encuesta AND P.id_pregunta=A.id_pregunta",[id_encuesta])
     options=cur.fetchall()
 
+    cur.execute("SELECT COUNT(r.correo) FROM Responde as r WHERE r.id_encuesta =%s",[id_encuesta])
+    n_encuestados = cur.fetchone()
+
+    
+  
+
     values = []
 
     for f in options:
@@ -351,7 +357,8 @@ def visualizar_resultados(id_encuesta):
     ,questions=questions
     ,options=options
     ,id_encuesta=id_encuesta,
-    values=values)
+    values=values,
+    n_encuestados=n_encuestados)
 
 #El usuario accede al portal de creacion de encuestas
 @app.route("/portal-encuestador-encuestas-crear/<int:question_number>")
