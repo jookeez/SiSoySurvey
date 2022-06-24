@@ -88,17 +88,17 @@ def enviar_encuesta(id_encuesta):
     name_encuesta = curr.fetchone()
 
     for row in data:
-        enviar_mensaje(row[0],row[1],id_encuesta,name_encuesta[0])
+        enviar_mensaje(row[0], row[1], id_encuesta, name_encuesta[0])
 
     informacion = {
         'titulo_favicon': "Envío de encuestas",
-        'titulo': "¡Encuestas enviadas!",
+        'titulo': "''" + name_encuesta[0] + "'' ha sido enviada.",
         'descripcion': "En unos momentos los participantes la recibirán en sus correos electrónicos.",
-        'texto_boton': "Volver",
-        'enlace_boton': "javascript:history.back()"
+        'texto_boton': "Ver Encuesta",
+        'enlace_boton': "/portal-encuestador-encuestas-visualizar/" + str(id_encuesta)
     }
     mysql.connection.commit()
-    return render_template("aviso-boton.html", informacion=informacion)
+    return render_template("portal-encuestador-aviso-boton.html", informacion=informacion)
 
 # ENVIA ENCUESTAS POR CORREO A LOS PARTICIPANTES
 @app.route('/enviar-mensaje/<nombre>/<correo>/<int:id_encuesta>/<encuesta>')
@@ -219,7 +219,15 @@ def enviar_verificacion_portal():
         mensaje = Message(subject, sender=(enviar_nombre, enviar_mail), recipients=[correo_form])
         mensaje.html = render_template("mail-verificar.html", data=data)
         mail.send(mensaje)
-        return redirect(url_for('portal_encuestador_participantes_agregar'))
+
+        informacion = {
+            'titulo_favicon': "Verificación de correo electrónico",
+            'titulo': "Verificación de correo electrónico",
+            'descripcion': "¡La persona que acabas de agregar debe confirmar su correo! Enviamos una confirmación a " + correo_form,
+            'texto_boton': "Ir a Listado de Participantes",
+            'enlace_boton': "/portal-encuestador-participantes-listado"
+        }
+        return render_template("portal-encuestador-aviso-boton.html", informacion=informacion)
 
 # MUESTRA EL LISTADO DE PARTICIPANTES EN EL PORTAL DEL ENCUESTADOR
 @app.route('/portal-encuestador-participantes-listado')
@@ -434,12 +442,19 @@ def cambiar_nombre_participante(correo):
         return redirect(url_for('portal_participante_perfil'))
 
 # EL ENCUESTADOR ELIMINA AL PARTICIPANTE DE LA BASE DE DATOS
-@app.route('/eliminar-participante/<correo>')
-def eliminar_participante(correo):
+@app.route('/eliminar-participante/<correo>/<nombre>')
+def eliminar_participante(correo, nombre):
+    informacion = {
+        'titulo_favicon': "Darse de baja",
+        'titulo': "¡Has eliminado a " + nombre + "!",
+        'descripcion': "El correo " + correo + " fue dado de baja exitosamente.",
+        'texto_boton': "Volver a Listado de participantes",
+        'enlace_boton': "/portal-encuestador-participantes-listado"
+    }
     cur = mysql.connection.cursor()
     cur.execute('DELETE FROM Encuestados WHERE correo = %s', [correo])
     mysql.connection.commit()
-    return redirect(url_for('portal_encuestador_participantes'))
+    return render_template("portal-encuestador-aviso-boton.html", informacion=informacion)
 
 
 
@@ -598,7 +613,7 @@ def eliminar_de_tabla_responde(id_encuesta):
     return 1
 
 # EL ENCUESTADOR ELIMINA LA ENCUESTA DE LA BASE DE DATOS
-# Tipo = abierta,cerrada, por_realizar
+# Tipo = abierta, cerrada, por_realizar
 @app.route('/eliminar-encuesta/<tipo>/<int:id_encuesta>')
 def eliminar_encuesta(tipo, id_encuesta):
 
