@@ -418,7 +418,7 @@ def portal_participante():
 @app.route("/portal-participante-encuestas-responder/<mail>")
 def encuestas_encuestado(mail):
     cur1 = mysql.connection.cursor()
-    cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Abierta') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
+    cur1.execute("SELECT En.id_encuesta, En.nombre, En.descripcion, En.estado, En.preguntas FROM Encuestas as En WHERE En.estado = 'Abierta' AND NOT EXISTS (SELECT r.id_encuesta  FROM Responde as r WHERE En.id_encuesta = r.id_encuesta  AND r.correo = %s)",[mail])
     data = cur1.fetchall()
     return render_template("portal-participante-encuestas-responder.html", data=data,mail=mail)
 
@@ -426,7 +426,7 @@ def encuestas_encuestado(mail):
 @app.route('/portal-participante-encuestas-respondidas/<mail>')
 def encuestas_respondidas_participante(mail):
     cur1 = mysql.connection.cursor()
-    cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Cerrada') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
+    cur1.execute("SELECT Enc.id_encuesta,Enc.nombre,Enc.descripcion, Enc.estado,Enc.preguntas  FROM(   SELECT E.id_encuesta,E.nombre,E.descripcion, E.estado,E.preguntas FROM Encuestas as E WHERE E.estado='Cerrada' OR E.estado='Abierta') as Enc ,(SELECT r.id_encuesta FROM Responde as r WHERE r.correo = %s ) as Res WHERE Res.id_encuesta=Enc.id_encuesta ",[mail])
     data = cur1.fetchall()
     return render_template("portal-participante-encuestas-respondidas.html", data=data)
 
@@ -565,7 +565,7 @@ def encuestas_finalizar(id_encuesta, correo,preguntas,id_alternativa,id_pregunta
 @app.route('/ultimas-encuestas')
 def ultimas_encuestas():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT id_encuesta, nombre, descripcion, fecha_inicio, fecha_fin, preguntas FROM Encuestas WHERE estado='Abierta'")
+    cur.execute("SELECT En.nombre, En.descripcion,En.fecha_inicio, En.preguntas FROM Encuestas as En WHERE En.estado = 'Abierta' AND NOT EXISTS (SELECT r.id_encuesta  FROM Responde as r WHERE En.id_encuesta = r.id_encuesta)")
     data = cur.fetchall()
     return render_template("ultimas-encuestas.html", data=data)
 
