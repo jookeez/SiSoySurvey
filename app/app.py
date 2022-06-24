@@ -442,11 +442,15 @@ def cambiar_nombre_participante(correo):
         return redirect(url_for('portal_participante_perfil'))
 
 # EL ENCUESTADOR ELIMINA AL PARTICIPANTE DE LA BASE DE DATOS
-@app.route('/eliminar-participante/<correo>/<nombre>')
-def eliminar_participante(correo, nombre):
+@app.route('/eliminar-participante/<correo>')
+def eliminar_participante(correo):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT nombre FROM Encuestados WHERE correo = %s', [correo])
+    data = cur.fetchone()
+    cur.close()
     informacion = {
         'titulo_favicon': "Darse de baja",
-        'titulo': "¡Has eliminado a " + nombre + "!",
+        'titulo': "¡Has eliminado a " + data[0] + "!",
         'descripcion': "El correo " + correo + " fue dado de baja exitosamente.",
         'texto_boton': "Volver a Listado de participantes",
         'enlace_boton': "/portal-encuestador-participantes-listado"
