@@ -520,45 +520,32 @@ def responder_encuestas(id_encuesta, correo):
 # EL USUARIO HA FINALIZADO UNA ENCUESTA
 @app.route('/encuestas-finalizar/<int:id_encuesta>/<correo>/<int:preguntas>/<int:id_alternativa>/<int:id_pregunta>/<titulo>', methods=['GET', 'POST'])
 def encuestas_finalizar(id_encuesta, correo,preguntas,id_alternativa,id_pregunta,titulo):
-    print("entre1")
     if request.method == 'POST':
-        print("entre2")
         cur = mysql.connection.cursor()
         answers = []
         
         #select=f"SELECT R.correo, R.id_encuesta FROM Responde as R WHERE R.correo='{correo}' AND R.id_encuesta={id_encuesta}"
         #cur.execute(select)
         #responde=cur.fetchall()
-        print(1)
-        
-            
+  
         for c in range(1,preguntas+1):
-            print('question'+str(c))
             aux= request.form['question'+str(c)]
             answers.append( int(aux)+id_alternativa)
         i=0
-        print(2)
         for answer in answers:
             query="INSERT INTO Respuestas(id_pregunta,id_alternativa,correo) VALUES ("+str(id_pregunta+i) +","+str(answer)+ ",'"+str(correo)+"')"
-            print(query)
             cur.execute(query)
             i+=1
-        print(3)
         cur.execute('INSERT INTO Responde(correo,id_encuesta) VALUES (%s,%s)',[correo, id_encuesta])
-       
-    
-        #cur.execute('SELECT nombre FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
-        #data = cur.fetchone()
-        print(4)
-        
+        cur.execute('SELECT nombre FROM Encuestas WHERE id_encuesta = %s', [id_encuesta])
+        data = cur.fetchone()
         mysql.connection.commit()
 
         informacion = {
             'titulo_favicon': "¡Encuesta finalizada!",
             'titulo': "¡Gracias por tu opinión!",
-            'descripcion': "La encuesta ''" + titulo + "'' fue respondida exitosamente."
+            'descripcion': "La encuesta ''" + data[0] + "'' fue respondida exitosamente."
         }
-        print(5)
         return render_template("aviso.html", informacion=informacion)
 
 #PODEMOS VER LAS ULTIMAS ENCUESTAS QUE ESTAN ABIERTAS
@@ -751,7 +738,6 @@ def logear_encuestador():
         cur.execute('SELECT * FROM Encuestadores WHERE correo = %s', [email])
         user = cur.fetchone()
         cur.close()
-        #print(user[2])
 
         if user is not None:
             if password == user[2]:
@@ -969,11 +955,11 @@ app.secret_key = "mysecretkey"
 
 # ELIMINA TODOS LOS CARACTERES QUE UNA PALABRA O STRING NO NECESITE TENER
 def procesar_texto(palabra):
-    caracteres_especiales = "!#$%^&*()|@¢∞¬÷≠¬´“”" 
+    caracteres_especiales = "¿?¡!#$%^&*()|@¢∞¬÷≠¬´“”" 
     for caracter in caracteres_especiales:
         palabra_sin_caracteres_especiales = palabra.replace(caracter, '')
     palabra_con_espacios = palabra_sin_caracteres_especiales.replace('%20', ' ')
-    #print(palabra_con_espacios)
+    palabra_con_espacios = palabra_sin_caracteres_especiales.replace('%20', ' ')
     return palabra_con_espacios
 
 # ELIMINA TODOS LOS CARACTERES QUE UNA PALABRA O STRING NO NECESITE TENER

@@ -27,7 +27,7 @@ class="nav-link text-white"
             <form action="/cambiar-nombre-participante/{{ session['correo'] }}", method="POST">
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">Nombre</span>
-                    <input type="text" name="nuevo_nombre" class="form-control" placeholder="{{ session['nombre'] }}" aria-label="Nombre" aria-describedby="basic-addon1">
+                    <input required type="text" name="nuevo_nombre" class="form-control" placeholder="{{ session['nombre'] }}" aria-label="Nombre" aria-describedby="basic-addon1">
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">Correo electrónico</span>
