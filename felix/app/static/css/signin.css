@@ -1,26 +1,24 @@
+html,
 body {
-  display: inline;
+  height: 100%;
+}
+
+body {
+  display: flex;
   align-items: center;
   padding-top: 40px;
   padding-bottom: 40px;
-}
-
-.fondo {
-  width: 100%;
-  padding: 100px 30px;
-}
-
-.bg-participante {
   background-color: #fff0c7;
 }
 
-.bg-encuestador {
-  background-color: #bebebe;
+.bg-privado {
+  background-color: #bebebe !important;
 }
 
 .form-signin {
-  width: auto;
-  max-width: 500px;
+  width: 100%;
+  max-width: 400px;
+  padding: 15px;
   margin: auto;
 }
 
@@ -48,10 +46,6 @@ body {
   padding: 1rem 0.75rem !important;
 }
 
-.footer-left {
-  text-align: left;
-}
-
 @media (min-width: 1200px) and (max-width: 1399px) {
 
 }
@@ -70,10 +64,4 @@ body {
 
 @media (max-width: 575px) {
 
-}
-
-@media (max-width: 400px) {
-  .input-group-text {
-    width: 100%;
-  }
 }

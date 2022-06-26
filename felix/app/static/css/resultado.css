@@ -1,6 +1,7 @@
-.carrusel-degradado {
-    z-index: 1;
+.position-footer {
+    bottom: 0px;
     position: absolute;
+    width: 100%;
 }
 
 @media (min-width: 1200px) and (max-width: 1399px) {
@@ -20,8 +21,5 @@
 }
 
 @media (max-width: 575px) {
-    .img-carrusel {
-        object-fit: cover;
-        height: 530px;
-    }
+
 }

@@ -27,29 +27,27 @@ active
             <table class="table" class="scrollbar .scrollbar-danger">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th class="ocultar-id">ID</th>
                         <th>Titulo</th>
-                        <th>Descripción</th>
-                        <th>Fecha apertura</th>
-                        <th>Fecha cierre</th>
-                        <th>Preguntas</th>
+                        <th class="ocultar-descripcion">Descripción</th>
+                        <!--<th class="ocultar-fecha">Fecha apertura</th>-->
+                        <!--<th class="ocultar-fecha">Fecha cierre</th>-->
+                        <th class="ocultar-preguntas ocultar">Preguntas</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for pollc in pollsClosed %}
+                    {% for pollc in Closed %}
                     <tr>
-                        <form action="/editar_encuesta" method="POST">
-                            <td name="code" scope="col"><b>{{pollc.0}}</b></td>
-                            <td name="title" scope="col">{{pollc.1}}</td>
-                            <td name="description" scope="col">{{pollc.2}}</td>
-                            <td scope="col">{{pollc.4}}</td>
-                            <td scope="col">{{pollc.5}}</td>
-                            <td scope="col">{{pollc.6}}</td>
-                            <td scope="col" class="td-finalizadas">
-                                <a href="/editar_encuesta/{{pollc.0}}" class="btn btn-success a-botones">Editar</a> <!--/editar_encuesta/{{pollc.1}}-->
-                                <a href="/eliminar_encuesta/{{pollc.0}}" class="btn btn-danger a-botones">Eliminar</a><!--/eliminar_encuesta/{{pollc.1}}-->
-                            </td>
-                        </form>
+                        <td class="ocultar-id">{{pollc.0}}</td>
+                        <td>{{pollc.1}}</td>
+                        <td class="ocultar-descripcion">{{pollc.2}}</td>
+                        <!--<td class="ocultar-fecha">{{pollc.4}}</td>-->
+                        <!--<td class="ocultar-fecha">{{pollc.5}}</td>-->
+                        <td class="ocultar-preguntas ocultar">{{pollc.6}}</td>
+                        <td class="td-finalizadas">
+                            <a class="btn btn-success a-botones" href="/portal-encuestador-visualizar-resultados/{{ pollc.0 }}">Resultados</a>
+                            <a class="btn btn-danger a-botones" href="/eliminar-encuesta/cerrada/{{ pollc.0 }}">Eliminar</a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

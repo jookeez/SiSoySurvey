@@ -11,5 +11,36 @@ active
 {% endblock %}
 
 {% block body %}
-
+<div class="container">
+  <div class="mini-contenedor listado-encuestas">
+    <div class="container-fluid py-5">
+      <h1 class="display-5 fw-bold mb-3">Resultados</h1>
+      <table class="table" class="scrollbar .scrollbar-danger">
+        <thead>
+            <tr>
+                <th class="ocultar-id">ID</th>
+                <th>Titulo</th>
+                <th class="ocultar-descripcion">Descripción</th>
+                <th class="ocultar-fecha">Fecha apertura</th>
+                <th class="ocultar-fecha">Fecha cierre</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pollc in Closed %}
+            <tr>
+                <td class="ocultar-id">{{pollc.0}}</td>
+                <td>{{pollc.1}}</td>
+                <td class="ocultar-descripcion">{{pollc.2}}</td>
+                <td class="ocultar-fecha">{{pollc.4}}</td>
+                <td class="ocultar-fecha">{{pollc.5}}</td>
+                <td class="td-resultados">
+                    <a class="btn btn-success a-botones" href="/portal-encuestador-visualizar-resultados/{{ pollc.0 }}">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+  </div>
+</div>
 {% endblock %}

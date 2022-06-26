@@ -1,0 +1,54 @@
+{% extends "./layout-responde.html" %}
+
+{% block title %}
+Encuestas
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/encuestas.css')}}">
+{% endblock %}
+
+{% block body %}
+<section>
+    <form action="/encuestas-finalizar/{{datos.id_encuesta}}/{{datos.correo}}/{{informacion.preguntas}}/{{options[0].0}}/{{questions[0].0}}/{{ informacion.nombre }}" method="POST">
+        <main class="container p-3">
+            <div class="bg-light p-5 rounded">
+                <h1>{{ informacion.nombre }}</h1>
+                <p class="lead">{{ informacion.descripcion }}</p>
+                {% set i = namespace(a=-1)  %}
+
+                {% for question in questions %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            {{ loop.index }}. {{ question.1 }}
+                        </div>
+                        <div class="card-body">
+                            {% set i.a= i.a + 1  %}
+                            <div class="form-check">
+                                <div>
+                                    <input class="form-check-input" type="radio" name="question{{loop.index}}" id="{{loop.index}}{{i.a}}" value={{i.a}} required>
+                                    <label class="form-check-label" for="question{{loop.index}}{{i.a}}">{{options[i.a].1}}</label>
+                                </div>
+                                {% set i.a= i.a + 1  %}
+                                <div>
+                                    <input class="form-check-input" type="radio" name="question{{loop.index}}" value={{i.a}} id="{{loop.index}}{{i.a}}" required>
+                                    <label class="form-check-label" for="question{{loop.index}}{{i.a}}">{{options[i.a].1}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <!--
+                <div class="progress mt-4">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="{{ informacion.preguntas }}"></div>
+                </div>
+                -->
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-warning">Finalizar</button>
+                    <a href="{{ url_for('index') }}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </div>
+        </main>
+    </form>
+  </section>
+{% endblock %}

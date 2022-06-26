@@ -1,0 +1,109 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+{% endblock %}
+
+{% block body %}
+
+
+
+<div class="container">
+  <form action="/guardar_encuesta/{{question_number}}" method="POST">
+    <div class="mini-contenedor">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold mb-3">Resultados</h1>
+        <div class="mini-contenedor p-3 mb-3 mt-3">
+          <div class="mb-3">
+            <h3 class="form-label">{{polls[0].1}}</h3>
+            <p>{{polls[0].2}}</p>
+          </div>
+          <table>
+            <tr>
+              <th>ID</th>
+              <td class="margen-izq">{{id_encuesta}}</td>
+            </tr>
+            <tr>
+              <th>Fecha Apertura</th>
+              <td class="margen-izq">?</td>
+            </tr>
+            <tr>
+              <th>Fecha Cierre</th>
+              <td class="margen-izq">?</td>
+            </tr>
+            <tr>
+              <th>Personas encuestadas</th>
+              <td class="margen-izq">?</td>
+            </tr>
+            <tr>
+              <th>Cantidad de preguntas</th>
+              <td class="margen-izq">{{polls[0].4}}</td>
+            </tr>
+          </table>
+        </div> 
+        {% set i = namespace(a=-1) %}
+        {% for question in questions%}
+        <!--Bloque Pregunta-->
+        {% set i.a= i.a + 1  %}
+        <div class="mini-contenedor p-3 mb-3 mt-3">
+          <h5>Pregunta {{ loop.index }}: {{question.1}}</h5>
+          <ul>
+            <!--Bloque Items-->
+            <li>
+              {{options[i.a].1}}
+              ({{values[i.a]}})
+            </li>
+            {% set i.a= i.a + 1  %}
+            <li>
+              {{options[i.a].1}}
+              ({{values[i.a]}})
+            </li>
+          </ul>
+     
+        </div>
+        
+        <div class="mini-contenedor p-3 mb-3 mt-3">
+          <!--<div class="myChart" style="position: relative; height:10vh; width:10vw">-->
+            <canvas id="myChart" width="10vw" height="10vh"></canvas>
+          
+          
+          <script>
+            var ctx= document.getElementById("myChart").getContext("2d");
+            var myChart= new Chart(ctx,{
+                type:"pie",
+                data:{
+                    labels:['a','b'],
+                    datasets:[{
+                            label:'Alternativas',
+                            data:[2,0],
+                            backgroundColor:[
+                                'rgb(66, 134, 244,0.5)',
+                                'rgb(74, 135, 72,0.5)'
+                            ]
+                    }]
+                },
+                options:{
+                    scales:{
+                        yAxes:[{
+                                ticks:{
+                                    beginAtZero:true
+                                }
+                        }]
+                    }
+                }
+            });
+          </script>
+          <!--</div>-->
+        </div>
+        {% endfor %}
+        <button onclick="history.go(-1)" class="btn btn-warning btn-lg" type="button">Volver</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

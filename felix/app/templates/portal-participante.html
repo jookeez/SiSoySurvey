@@ -14,11 +14,18 @@ active
 <div class="container">
     <div class="mini-contenedor">
         <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold mb-3">Hola "Nombre"</h1>
+            <h1 class="display-5 fw-bold mb-3">Hola {{ session['primer-nombre'] }}</h1>
             <p for="basic-url" class="form-label mb-4">Aquí puedes ver un resumen de tus actividades.</p>
-        </div>
-        <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold mb-3">Sin actividades.</h1>
+            <div>
+                <div class="mini-contenedor contenedor-resumen">
+                    <div class="container-fluid contenedor-interno">
+                        <p class="form-label mb-2">Has respondido <b>{{ informacion.encuestas_respondidas }}</b> encuestas.</p>
+                        <a href="/portal-participante-encuestas-respondidas/{{ session['correo'] }}">
+                            <button class="btn btn-responsive btn-warning btn-md mt-2" type="button">Ver</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

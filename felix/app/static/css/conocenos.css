@@ -68,7 +68,7 @@
     }
 }
 
-@media (max-width: 575px) {
+@media (min-width: 400px) and (max-width: 575px) {
     .tarjeta-conocenos {
         width: 100%;
         min-width: 100%;
@@ -85,5 +85,18 @@
     }
     .p-5 {
         padding: 0.5rem !important;
+    }
+}
+
+@media (max-width: 399px) {
+    .tarjeta-conocenos {
+        width: 200px;
+        min-width: 100% !important;
+        max-width: none !important;
+        height: 330px;
+    }
+    .card-body {
+        right: 0px;
+        bottom: 22px;
     }
 }

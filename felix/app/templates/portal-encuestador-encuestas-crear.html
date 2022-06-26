@@ -1,7 +1,7 @@
 {% extends "./layout-portal-encuestador.html" %}
 
 {% block title %}
-Portal del Encuestador
+Crear Encuesta
 {% endblock %}
 
 {% block head %}{% endblock %}
@@ -20,20 +20,53 @@ active
 
 {% block body %}
 <div class="container">
+  <form action="/guardar_encuesta/{{question_number}}" method="POST">
     <div class="mini-contenedor">
-        <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold mb-3">Crear Encuesta</h1>
-            <form action="/crear_encuesta" method="POST">
-                <div class="form-floating mb-3">
-                    <input type="text" name="titulo" class="form-control" id="floatingInput" placeholder="" required>
-                    <label for="floatingInput">Título</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <textarea class="form-control" name="descripcion" placeholder="" id="floatingTextarea" required></textarea>
-                    <label for="floatingTextarea">Descripción</label>
-                </div>
-                <button class="btn btn-primary btn-lg" type="submit">Agregar</button>
-            </form>
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold mb-3">Crear Encuesta</h1>
+        <div class="mb-3">
+          <h4 class="form-label">Título</h4>
+          <input type="text" name="title" class="form-control" required id="floatingInput" placeholder="Encuesta docente de las universidades en Chile" >
         </div>
+        <div class="mb-3">
+          <h4 class="form-label">Descripción</h4>
+          <textarea class="form-control" name="description" required placeholder="Percepción de los alumnos sobre la forma de enseñar de los docentes de las universidades." id="floatingTextarea" ></textarea>
+        </div>
+        <!--Bloque Pregunta-->
+        <div class="mini-contenedor p-3 mb-3 mt-3">
+          <h4 class="form-label">Preguntas</h4>
+          {% for i in range(question_number)%}
+          <div class="container-fluid py-3">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">Pregunta {{i+1}}</span>
+              <input type="text" name="Pregunta{{i}}" class="form-control" id="QInput{{i+1}}" placeholder="¿Asistió regularmente a la universidad?" aria-label="Nombre" aria-describedby="basic-addon1">
+            </div>
+            <ol class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon2">Alternativa 1</span>
+              <input type="text" required name="item1-{{i}}" class="form-control" id="I1Input{{i+1}}" placeholder="Si" required aria-label="Respuesta1" aria-describedby="basic-addon2">
+            </ol>
+            <ol class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon3">Alternativa 2</span>
+              <input type="text" required name="item2-{{i}}" class="form-control" id="I2Input{{i+1}}" placeholder="No" required aria-label="Respuesta2" aria-describedby="basic-addon3">
+            </ol>
+          </div>
+          {% endfor %}
+          <a href="/portal-encuestador-encuestas-crear/{{question_number + 1}}">
+            <button class="btn btn-responsive btn-success btn-lg" type="button">Añadir</button>
+          </a>
+          {% if question_number > 1 %}
+          <a href="/portal-encuestador-encuestas-crear/{{question_number - 1}}">
+            <button class="btn btn-responsive btn-danger btn-lg" type="button">Eliminar</button>
+          </a>
+          {% else %}
+          <a href="#">
+            <button class="btn btn-responsive btn-danger btn-lg" disabled type="button">Eliminar</button>
+          </a>
+          {% endif %}
+        </div>
+        <button class="btn btn-responsive btn-warning btn-lg mt-2" type="submit">Guardar Encuesta</button>
+      </div>
     </div>
+  </form>
 </div>
+{% endblock %}

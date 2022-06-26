@@ -6,10 +6,24 @@ Inicio
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block body %}
 <!-- CARRUSEL -->
+<!-- SCRIPT PARA QUE NO REGRESE CON EL BOTON DEL NAVEGADOR -->
+<script>
+  $(document).ready(function() {
+      function disableBack() {
+          window.history.forward()         
+      }
+      window.onload = disableBack();
+      window.onpageshow = function(e) {
+          if (e.persisted)
+            disableBack(); 
+      }
+  });
+</script>
 <section>
   <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">

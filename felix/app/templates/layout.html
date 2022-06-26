@@ -25,8 +25,16 @@
               <li><a href="{{ url_for('terminos')}}" class="nav-link nav-enlace px-2">Términos</a></li>
             </ul>
             <div class="text-end">
-              <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar Sesión</button></a>
-              <a href="{{ url_for('registrarse')}}"><button type="button" class="btn btn-primary">Registrarse</button></a>
+              {% if 'participante' in session %}
+                <a href="{{ url_for('portal_participante')}}"><button type="button" class="btn btn-outline-light me-2">Hola {{ session['primer-nombre'] }}</button></a>
+                <a href="{{ url_for('cerrar_sesion')}}"><button type="button" class="btn btn-warning">Cerrar Sesión</button></a>
+              {% elif 'encuestador' in session %}
+                <a href="{{ url_for('portal_encuestador')}}"><button type="button" class="btn btn-outline-light me-2">Hola {{ session['primer-nombre'] }}</button></a>
+                <a href="{{ url_for('cerrar_sesion')}}"><button type="button" class="btn btn-warning">Cerrar Sesión</button></a>
+              {% else %}
+                <a href="{{ url_for('iniciar_sesion')}}"><button type="button" class="btn btn-outline-light me-2">Iniciar Sesión</button></a>
+                <a href="{{ url_for('registrarse')}}"><button type="button" class="btn btn-warning">Registrarse</button></a>
+              {% endif %}
             </div>
           </div>
         </div>
