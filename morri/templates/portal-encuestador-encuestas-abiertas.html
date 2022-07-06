@@ -1,0 +1,59 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block active_encuestas %}
+aria-expanded="true"
+{% endblock %}
+
+{% block active_encuestas_collapse %}
+show
+{% endblock %}
+
+{% block active_encuestas_abiertas %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="mini-contenedor listado-encuestas">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Encuestas Abiertas</h1>
+            <p for="basic-url" class="form-label mb-4">Los participantes ya pueden responder estas encuestas.</p>
+            <table class="table" class="scrollbar .scrollbar-default">
+                <thead>
+                    <tr>
+                        <th class="ocultar-id">ID</th>
+                        <th>Titulo</th>
+                        <th class="ocultar-descripcion">Descripción</th>
+                        <th class="ocultar-fecha">Fecha apertura</th>
+                        <th class="ocultar-fecha">Fecha cierre</th>
+                        <th class="ocultar-preguntas ocultar">Preguntas</th>
+                    </tr>
+                </thead>
+                <tbody>    
+                    {% for pollo in Open %}
+                    <tr>
+                        <td class="ocultar-id">{{pollo.0}}</td>
+                        <td>{{pollo.1}}</td>
+                        <td class="ocultar-descripcion">{{pollo.2}}</td>
+                        <td class="ocultar-fecha">{{pollo.4}}</td>
+                        <td class="ocultar-fecha">{{pollo.5}}</td>
+                        <td class="ocultar-preguntas ocultar">{{pollo.6}}</td>
+                        <td class="td-abiertas">
+                            <a href="/portal-encuestador-encuestas-visualizar/{{pollo.0}}" class="btn btn-success a-botones">Ver</a>
+                            <a href="/finalizar-encuesta/{{pollo.0}}" class="btn btn-warning a-botones">Finalizar</a>
+                            <!--<a class="btn btn-danger a-botones" href="/eliminar-encuesta/abierta/{{ pollo.0 }}">Eliminar</a>-->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table> 
+        </div>
+    </div>
+</div>
+{% endblock %}

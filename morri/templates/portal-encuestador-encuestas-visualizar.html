@@ -1,0 +1,49 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block body %}
+<div class="container">
+  <form action="/guardar_encuesta/{{question_number}}" method="POST">
+    <div class="mini-contenedor">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold mb-3">Encuesta {{id_encuesta}}</h1>
+        <div class="mb-3">
+          <h4 class="form-label">Título</h4>
+          <p>{{polls[0].1}}</p>
+        </div>
+        <div class="mb-3">
+          <h4 class="form-label">Descripción</h4>
+          <p>{{polls[0].2}}</p>
+        </div> 
+        {% set i = namespace(a=-1) %}
+        {% for question in questions%}
+        <!--Bloque Pregunta-->
+        {% set i.a= i.a + 1  %}
+        <div class="mini-contenedor p-3 mb-3 mt-3">
+          <h5>Pregunta {{ loop.index }}: {{question.1}}</h5>
+          <ul>
+            <!--Bloque Items-->
+            <li>
+              {{options[i.a].1}}
+            </li>
+            {% set i.a= i.a + 1  %}
+            <li>
+              {{options[i.a].1}}
+            </li>
+          </ul>
+        </div>
+        {% endfor %}
+        <a href="/portal-encuestador-encuestas-editar/{{polls[0].0}}">
+          <button class="btn btn-success btn-lg" type="button">Editar</button>
+        </a>
+        <button onclick="history.go(-1)" class="btn btn-warning btn-lg" type="button">Volver</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

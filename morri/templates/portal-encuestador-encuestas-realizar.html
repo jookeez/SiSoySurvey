@@ -1,0 +1,55 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block active_encuestas %}
+aria-expanded="true"
+{% endblock %}
+
+{% block active_encuestas_collapse %}
+show
+{% endblock %}
+
+{% block active_encuestas_realizar %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="mini-contenedor listado-encuestas">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Encuestas Por Realizar</h1>
+            <p for="basic-url" class="form-label mb-4">Estas encuestas todavía no son enviadas a los participantes.</p>
+            <table class="table" class="scrollbar .scrollbar-primary">
+                <thead>
+                    <tr>
+                        <th class="ocultar-id">ID</th>
+                        <th>Titulo</th>
+                        <th class="ocultar-descripcion">Descripción</th>
+                        <th class="ocultar-preguntas ocultar">Preguntas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pollr in Ready %}
+                    <tr>
+                        <td class="ocultar-id">{{pollr.0}}</td>
+                        <td>{{pollr.1}}</td>
+                        <td class="ocultar-descripcion">{{pollr.2}}</td>
+                        <td class="ocultar-preguntas ocultar">{{pollr.4}}</td>
+                        <td class="td-realizar">
+                            <a class="btn btn-success a-botones" href="/portal-encuestador-encuestas-visualizar/{{ pollr.0 }}">Ver</a>
+                            <a href="/enviar-encuesta/{{pollr.0}}" class="btn btn-warning a-botones">Enviar</a>
+                            <a class="btn btn-danger a-botones" href="/eliminar-encuesta/por_realizar/{{ pollr.0 }}">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

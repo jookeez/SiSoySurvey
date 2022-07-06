@@ -1,0 +1,50 @@
+{% extends "./layout-portal-encuestador.html" %}
+
+{% block title %}
+Portal del Encuestador
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block active_participante %}
+aria-expanded="true"
+{% endblock %}
+
+{% block active_participante_collapse %}
+show
+{% endblock %}
+
+{% block active_participantes_listado %}
+active
+{% endblock %}
+
+{% block body %}
+<div class="container container-fit">
+    <div class="mini-contenedor">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold mb-3">Listado de Participantes</h1>
+            <p for="basic-url" class="form-label mb-4">Todos los participantes registrados han sido validados con una confirmación a su correo electrónico.</p>
+            <a href="javascript:location.reload()"><button type="button" class="btn btn-warning btn-lg px-4 me-sm-3 fw-bold mb-3">Actualizar</button></a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="ocultar-nombre">Nombre</th>
+                        <th class="ocultar-correo">Correo electrónico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for encuestado in encuestados %}
+                    <tr> 
+                        <td class="ocultar-nombre">{{ encuestado.1 }}</td>
+                        <td class="ocultar-correo">{{ encuestado.0 }}</td>
+                        <td class="ocultar-boton td-eliminar"> 
+                            <a class="btn btn-danger" href="/desuscribir/{{ encuestado.0 }}">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %} 
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

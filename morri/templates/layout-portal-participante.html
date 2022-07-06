@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} | SiSoySurvey</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon_32.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/color.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/portal.css')}}">    
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-participante">
+    <!-- MENU LATERAL -->
+    <div class="principal">
+      <div class="d-flex flex-column flex-shrink-0 p-3 text-white menu-lateral">
+        <a href="{{ url_for('index')}}" class="d-flex align-items-center mb-lg-0 text-white text-decoration-none logo-principal">
+            <img src="{{ url_for('static', filename='images/logo_semirecto_150.png')}}" alt="Inicio" title="">
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+          <li class="mb-1">
+            <a href="{{ url_for('portal_participante')}}" class="btn btn-menu align-items-center rounded collapsed {% block active_portal %}{% endblock %}">
+              Portal
+            </a>
+          </li>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#encuestas-collapse" {% block active_encuestas %}{% endblock %} >
+              Encuestas
+            </button>
+            <div class="collapse {% block active_encuestas_collapse %}{% endblock %}" id="encuestas-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="/portal-participante-encuestas-responder/{{ session['correo'] }}" class="nav-link text-white rounded {% block active_participantes_responder %}{% endblock %}">Por Responder</a></li>
+                <li><a href="/portal-participante-encuestas-respondidas/{{ session['correo'] }}" class="nav-link text-white rounded {% block active_participantes_respondidas %}{% endblock %}">Respondidas</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+          <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ url_for('static', filename='images/favicon.png')}}" alt="" width="32" height="32" class="rounded-circle me-2">
+            <strong>Participante</strong>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+            <li><a class="dropdown-item" href="{{ url_for('portal_participante_perfil')}}">Perfil</a></li>
+            <!-- <li><a class="dropdown-item" href="{{ url_for('portal_participante_ajustes')}}">Ajustes</a></li> -->
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ url_for('cerrar_sesion') }}">Cerrar sesión</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="contenedor-derecho">
+        {% block body %}{% endblock %}
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script src="{{ url_for('static', filename='js/popper.min.js')}}" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}}" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+</body>
+</html>
