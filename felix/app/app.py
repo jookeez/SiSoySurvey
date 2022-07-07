@@ -363,13 +363,25 @@ def visualizar_resultados(id_encuesta):
     for f in options:
         values.append(resultados_alternativa(f[0]))
 
+    data=[
+        ("a",3),
+        ("b",0),
+        ("c",1),
+    ]
+    labels = [row[0] for row in data]
+    valores = [row[1] for row in data] 
+    
+   
+   
+    
+    
     return render_template("portal-encuestador-visualizar-resultados.html"
     ,polls=polls
     ,questions=questions
     ,options=options
     ,id_encuesta=id_encuesta,
     values=values,
-    n_encuestados=n_encuestados)
+    n_encuestados=n_encuestados,labels=labels, valores=valores)
 
 #El usuario accede al portal de creacion de encuestas
 @app.route("/portal-encuestador-encuestas-crear/<int:question_number>")

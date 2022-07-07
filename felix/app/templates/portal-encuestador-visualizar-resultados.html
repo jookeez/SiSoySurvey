@@ -6,7 +6,7 @@ Portal del Encuestador
 
 {% block head %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -57,48 +57,48 @@ Portal del Encuestador
             <li>
               {{options[i.a].1}}
               ({{values[i.a]}})
+              
             </li>
             {% set i.a= i.a + 1  %}
             <li>
               {{options[i.a].1}}
               ({{values[i.a]}})
+              <canvas id="radarChart" width="900" height="200"></canvas>
+              <script>
+                  var ctx = document.getElementById("radarChart").getContext("2d");
+                  var radarChart = new Chart(ctx, {
+                      type:"pie",
+                      data: {
+                        labels: {{[options[i.a - 5].1,options[i.a - 6].1] | safe}},
+                        datasets: [
+                          {
+                            label: "alternativas",
+                            data: {{[values[i.a - 5],values[i.a -6]] | safe}},
+                            backgroundColor: ["Red","Blue","Green"] 
+                          }
+                        ]
+                      },
+                      option: {
+                        responsive: false
+                      }
+  
+  
+                  });
+  
+              </script> 
+  
+              
+              <!--</div>-->
             </li>
           </ul>
      
         </div>
         
         <div class="mini-contenedor p-3 mb-3 mt-3">
-          <!--<div class="myChart" style="position: relative; height:10vh; width:10vw">-->
-            <canvas id="myChart" width="10vw" height="10vh"></canvas>
+           
+         
+        
           
-          
-          <script>
-            var ctx= document.getElementById("myChart").getContext("2d");
-            var myChart= new Chart(ctx,{
-                type:"pie",
-                data:{
-                    labels:['a','b'],
-                    datasets:[{
-                            label:'Alternativas',
-                            data:[2,0],
-                            backgroundColor:[
-                                'rgb(66, 134, 244,0.5)',
-                                'rgb(74, 135, 72,0.5)'
-                            ]
-                    }]
-                },
-                options:{
-                    scales:{
-                        yAxes:[{
-                                ticks:{
-                                    beginAtZero:true
-                                }
-                        }]
-                    }
-                }
-            });
-          </script>
-          <!--</div>-->
         </div>
         {% endfor %}
         <button onclick="history.go(-1)" class="btn btn-warning btn-lg" type="button">Volver</button>
