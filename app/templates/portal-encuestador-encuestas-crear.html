@@ -8,22 +8,24 @@ Crear Encuesta
 <script>
   var size=0, count=0
   function makeQuestion(){
-      if(size===20) alert("Cantidad de preguntas maxima alcanzada")
+      if(size===20) alert("Cantidad de preguntas máxima alcanzada.")
       else{
           ++size
           ++count
-          const pregunta = document.createElement("li")
+          const pregunta = document.createElement("div")
           const textP = document.createElement("input")
           textP.type = "text"
           textP.size = "100"
           textP.maxlength = "100"
           textP.class = "pregunta"
-          textP.name = "p"+ count
+          textP.className = "form-control"
+          textP.name = "p" + count
 
           const borrarP = document.createElement("button")
           borrarP.type = "button"
+          borrarP.className = "btn btn-responsive btn-danger btn-lg"
           borrarP.appendChild(document.createTextNode("Borrar pregunta"))
-          borrarP.onclick= function(){
+          borrarP.onclick = function(){
               pregunta.remove()
               --size
           }
@@ -34,15 +36,17 @@ Crear Encuesta
 
           const crearA = document.createElement("button")
           crearA.type = "button"
+          crearA.className = "btn btn-responsive btn-success btn-lg"
           crearA.appendChild(document.createTextNode("Crear Alternativa"))
           crearA.onclick= function(){
               if(list.childElementCount<10){
-                  const alt = document.createElement("li")
+                  const alt = document.createElement("ol")
                   const textalt = document.createElement("input")
                   textalt.type = "text"
                   textalt.size = "50"
                   textalt.maxlength = "50"
                   textalt.class = "alternativa"
+                  textalt.className = "form-control"
                   textalt.name = "a" + count
                   alt.appendChild(textalt)
                   list.appendChild(alt)
@@ -51,6 +55,7 @@ Crear Encuesta
 
           const borrarA = document.createElement("button")
           borrarA.type = "button"
+          borrarA.className = "btn btn-responsive btn-warning btn-lg"
           borrarA.appendChild(document.createTextNode("Borrar Alternativa"))
           borrarA.onclick= function(){
               if(list.childElementCount>2){
@@ -63,17 +68,17 @@ Crear Encuesta
           pregunta.appendChild(crearA)
           pregunta.appendChild(borrarA)
           pregunta.appendChild(list)
+          document.className = "container-fluid py-3"
           document.getElementById("preguntas").appendChild(pregunta)
       }
   }
   function makeAlternative(list){
-      const alt = document.createElement("li")
+      const alt = document.createElement("ol")
       const textalt = document.createElement("input")
       textalt.type = "text"
-      textalt.size = "50"
-      textalt.maxlength = "50"
       textalt.class = "alternativa"
-      textalt.name = "a"+count
+      textalt.className = "form-control"
+      textalt.name = "a" + count
       alt.appendChild(textalt)
       list.appendChild(alt)
   }
@@ -109,23 +114,10 @@ active
         <!--Bloque Pregunta-->
         <div class="mini-contenedor p-3 mb-3 mt-3">
           <h4 class="form-label">Preguntas</h4>
-          <!--Morri-->
-          <input onclick="makeQuestion()" type="button" name="nuevaP" value="Agregar Pregunta"/>
           <div id="preguntas">
             
           </div>
-          <a href="/portal-encuestador-encuestas-crear/{{question_number + 1}}">
-            <button class="btn btn-responsive btn-success btn-lg" type="button">Añadir</button>
-          </a>
-          {% if question_number > 1 %}
-          <a href="/portal-encuestador-encuestas-crear/{{question_number - 1}}">
-            <button class="btn btn-responsive btn-danger btn-lg" type="button">Eliminar</button>
-          </a>
-          {% else %}
-          <a href="#">
-            <button class="btn btn-responsive btn-danger btn-lg" disabled type="button">Eliminar</button>
-          </a>
-          {% endif %}
+          <input class="btn btn-responsive btn-success btn-lg" onclick="makeQuestion()" type="button" name="nuevaP" value="Agregar Pregunta"/>
         </div>
         <button class="btn btn-responsive btn-warning btn-lg mt-2" type="submit">Guardar Encuesta</button>
       </div>
@@ -133,7 +125,25 @@ active
   </form>
 </div>
 {% endblock %}
-<!--div class="container-fluid py-3">
+<!--
+
+<div id="preguntas" class="container-fluid py-3">
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1">Pregunta</span>
+    <input type="text" name="Pregunta" class="form-control" id="QInput{{i+1}}" placeholder="" aria-label="Nombre" aria-describedby="basic-addon1">
+  </div>
+  <ol class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon2">Alternativa</span>
+    <input type="text" required class="form-control" placeholder="" required aria-label="Respuesta" aria-describedby="basic-addon2">
+  </ol>
+  <ol class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon3">Alternativa</span>
+    <input type="text" required class="form-control" placeholder="" required aria-label="Respuesta" aria-describedby="basic-addon3">
+  </ol>
+</div>
+
+
+<div class="container-fluid py-3">
   <div class="input-group mb-3">
     <span class="input-group-text" id="basic-addon1">Pregunta {{i+1}}</span>
     <input type="text" name="Pregunta{{i}}" class="form-control" id="QInput{{i+1}}" placeholder="¿Asistió regularmente a la universidad?" aria-label="Nombre" aria-describedby="basic-addon1">
@@ -146,4 +156,18 @@ active
     <span class="input-group-text" id="basic-addon3">Alternativa 2</span>
     <input type="text" required name="item2-{{i}}" class="form-control" id="I2Input{{i+1}}" placeholder="No" required aria-label="Respuesta2" aria-describedby="basic-addon3">
   </ol>
-</div-->
+</div>
+
+<a href="/portal-encuestador-encuestas-crear/{{question_number + 1}}">
+  <button class="btn btn-responsive btn-success btn-lg" type="button">Añadir</button>
+</a>
+{% if question_number > 1 %}
+<a href="/portal-encuestador-encuestas-crear/{{question_number - 1}}">
+  <button class="btn btn-responsive btn-danger btn-lg" type="button">Eliminar</button>
+</a>
+{% else %}
+<a href="#">
+  <button class="btn btn-responsive btn-danger btn-lg" disabled type="button">Eliminar</button>
+</a>
+{% endif %}
+-->
