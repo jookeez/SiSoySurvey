@@ -6,10 +6,10 @@ from datetime import date, datetime
 app = Flask(__name__)
 
 # CONEXION SQL
-app.config['MYSQL_HOST'] = '103.195.100.230'
-app.config['MYSQL_USER'] = 'jookeezc_server'
-app.config['MYSQL_PASSWORD'] = 'is2_gonzal0'
-app.config['MYSQL_DB'] = 'jookeezc_encuesta'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = ''
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = ''
 mysql = MySQL(app)
 
 '''
@@ -25,7 +25,7 @@ mysql = MySQL(app)
 app.config['MAIL_SERVER'] = 'encuestas.jookeez.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = "no-responder@encuestas.jookeez.com"
-app.config['MAIL_PASSWORD'] = "is2_gonzal0"
+app.config['MAIL_PASSWORD'] = "PASSWORD"
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_MAX_EMAILS'] = 500  # Maximo de correos a enviar
